@@ -106,9 +106,20 @@ amendments by construction. Keep new criteria condition-neutral.
    still clear the gate. Not fixed here: changing the rubric changes the release
    contract, which is the maintainer's call.
 
-2. **The model pin is stale.** `runners.example.json` pins `claude-opus-4-8`. The
-   README is right that the pin belongs in published results; confirm the pin resolves
-   before spending a run on it.
+2. **Isolation was incomplete, and it was both a validity and a cost bug.**
+   `--setting-sources ""` does not stop the operator's MCP servers from loading. On this
+   machine a two-token prompt carried about 49,000 tokens of context; adding
+   `--strict-mcp-config` cut it to about 6,800, and the per-call cost with it. The
+   responses being judged were being shaped by whichever MCP servers the operator had
+   connected — in both conditions, so not a directional bias, but not reproducible
+   either. Fixed in `runners.example.json`; `evals/README.md` now says how to check.
+
+   Separately, `--max-budget-usd` does not cap spend. Given $0.20 a call reported
+   $1.004; given $0.10 it reported $0.590. It aborts after the fact and returns no
+   result, so the money is spent and the row is lost.
+
+   The `claude-opus-4-8` pin does resolve and is not stale; an earlier note here said
+   otherwise and was wrong.
 
 3. **Autonomy is scored at 25% on a runner with `--tools ""`.** The `agent-owned-edit`
    case asks what the agent *should* do, so a text answer is gradeable, but no case can

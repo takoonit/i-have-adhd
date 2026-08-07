@@ -2,6 +2,7 @@
   "claude": {
     "command": [
       "claude",
+      "--strict-mcp-config",
       "--disable-slash-commands",
       "--print",
       "--output-format",
