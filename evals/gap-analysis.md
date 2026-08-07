@@ -466,7 +466,47 @@ question, from the author of Claude Code, is "would the agent make a mistake wit
 this rule? If not, delete it." Rules 3 and 7 have not been through it and are the next
 candidates.
 
-## 13. What would falsify this
+## 13. Leave-one-out on rules 3 and 7
+
+Three arms differing in one rule: the full skill, the skill with rule 3 deleted, the
+skill with rule 7 deleted. Both ablated arms renumbered to 9 so the numerals were not a
+second variable, and the frontmatter phrase "make wins visible" stripped from the rule-7
+arm so the behaviour could not leak back through the description. Three cases that
+invite both behaviours, 3 trials each, 27 calls, $2.04.
+
+Prediction recorded before the run: rule 3 survives, rule 7 does not.
+
+| arm | ends with a concrete action | states what now works |
+| --- | --- | --- |
+| full | 8 of 9 | 6 of 9 |
+| rule 3 removed | **1 of 9** | 6 of 9 |
+| rule 7 removed | 8 of 9 | **6 of 9** |
+
+**Rule 3 earns its place, decisively.** Removing it takes the closing action from 8 of 9
+to 1 of 9. That is the largest single-rule effect measured anywhere in this document,
+and it partly rehabilitates the rule: section 12 graded the *universal closing CTA* as
+weakly evidenced in the reading literature, and that grading stands, but the model
+plainly does not produce the behaviour on its own. The rule is doing work the reading
+research did not predict.
+
+**Rule 7 is redundant.** Identical counts in every case, and reading the arms side by
+side shows why: rule 5's "Step 3 of 5 done: schema updated" *is* making completed work
+visible. Two rules, one behaviour. Both arms also produced the concrete verification
+handle rule 7 exists to secure.
+
+Two honest limits. The rule-7 metric sits at ceiling on the cases that exercise it (3 of
+3 in both arms), so this cannot distinguish a redundant rule from a metric too coarse to
+see the difference. And every case *hands* the completed work to the model in the prompt;
+a case where the agent did the work itself and had to decide whether to report it would
+be a fairer test, and needs a write-enabled runner.
+
+**Action taken: merged, not deleted.** Rule 7's one distinctive clause — say what now
+works *and how to see it* — moved into rule 5, which was already doing the rest of its
+job. The ruleset is 9 rules. No behaviour was dropped; one instruction slot was freed,
+which is the thing the ETH evidence says actually buys compliance for the rules that
+remain. Justified by the structural overlap visible in the text, not by n = 3.
+
+## 14. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
