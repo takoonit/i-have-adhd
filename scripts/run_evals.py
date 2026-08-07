@@ -182,7 +182,9 @@ def _condition_prompt(task: str, condition: str, skill_path: Path | None) -> str
     )
 
 
-def _parse_response(output: str, response_format: str) -> tuple[str, dict[str, Any], float | None]:
+def _parse_response(output: str | None, response_format: str) -> tuple[str, dict[str, Any], float | None]:
+    if output is None:
+        raise ValueError("Runner produced no readable output on stdout")
     if response_format == "text":
         return output.strip(), {}, None
     if response_format == "claude-json":
@@ -261,6 +263,12 @@ def run_evaluations(args: argparse.Namespace) -> int:
                         check=False,
                         capture_output=True,
                         text=True,
+                        # Without an explicit codec this decodes as the locale
+                        # encoding, which on Windows is cp1252 and cannot represent
+                        # what the models return. The decode raises in subprocess's
+                        # reader thread and stdout comes back as None.
+                        encoding="utf-8",
+                        errors="replace",
                         cwd=ROOT,
                     )
                     if completed.returncode == 0:
