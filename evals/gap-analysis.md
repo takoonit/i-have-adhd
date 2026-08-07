@@ -92,6 +92,11 @@ Still uncovered: rules 5, 7 and 10 have cases that touch them but no case where
 violating them is the *only* way to fail, so a regression there could pass the gate on
 other dimensions.
 
+The criteria on all six are written as reader outcomes, not as the amended rules
+restated. A criterion like "offers at most three options" would mark the baseline down
+for not following a rule it was never given, and the gate would then confirm the
+amendments by construction. Keep new criteria condition-neutral.
+
 ## 5. Harness findings
 
 1. **`rubric.md` does not measure what the skill claims.** The five dimensions are
@@ -112,7 +117,14 @@ other dimensions.
 4. **Judging is manual.** `run` is automated, `score` aggregates, and the step between
    them is a human writing score rows. Budget the run accordingly.
 
-5. **Windows: the test suite wrote junk into the repo root.** Fixed in
+5. **Translations now lag the English copy.** The condensed ten-rule list appears in
+   `.github/readme/README.{zh-CN,ja,ko,pt-BR,vi}.md` and `.github/install/INSTALL.*.md`.
+   English `README.md` and `INSTALL.md` carry the amendments; the ten translated files
+   do not, and were left alone rather than machine-translated into a repo whose English
+   wording is deliberately tuned. Known drift, not an oversight. `extensions/` and
+   `hooks/` were checked and embed no rule text.
+
+6. **Windows: the test suite wrote junk into the repo root.** Fixed in
    `tests/test_run_evals.py` — a `sh -c` stub interpolated a Windows path, `sh` ate the
    backslashes, and `touch` created its file in the runner's cwd. The assertion then
    failed for a reason unrelated to the behaviour under test.

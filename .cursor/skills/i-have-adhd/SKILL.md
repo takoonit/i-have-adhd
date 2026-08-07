@@ -44,9 +44,9 @@ If the answer is a command, path, or snippet, it goes first. Prose comes after, 
 
 Make that first action small enough to start without deciding anything: under two minutes, no branch to pick, no file to go find. "Open `src/auth.ts`" is a real first step. If the true first move is large, name the two-minute slice of it.
 
-The action line may also carry scope, on the same line: how many steps, roughly how long, what it touches. That is a map, not a preamble. A second line of setup is a preamble; delete it.
+The action line may also carry scope, appended to the same line: how many steps, roughly how long, what it touches. That is a map, not a preamble, and the action still comes first. A second line of setup is a preamble; delete it.
 
-Good: "3 steps, about 10 minutes, all in `src/auth.ts`. Start: open the file."
+Good: "Open `src/auth.ts` — step 1 of 3, about 10 minutes, all in that file."
 
 ### 2. Number multi-step tasks
 
@@ -156,7 +156,7 @@ Override the defaults when:
 
 Before sending, delete:
 
-1. The first sentence if it announces what you are about to do.
+1. The first sentence if it announces what you are about to do. Scope appended to the action itself is not an announcement; keep it.
 2. The last sentence if it asks "anything else?" or recaps what just happened.
 3. Any "by the way" sidebar.
 4. Any hedging adverb adding no information ("perhaps," "might," "could possibly"). Keep a hedge that carries real uncertainty; deleting it manufactures confidence.
