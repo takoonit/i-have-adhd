@@ -42,6 +42,14 @@ Isolation also drops the operator's saved model and effort settings, so the clau
 
 Runs are resumable: rerun the same command after a provider failure and completed `(case, trial, condition, runner)` rows are skipped. Each incomplete call is retried twice by default, and the final provider error is preserved.
 
+## Multi-turn cases
+
+A case carries either a single `prompt` or an ordered `turns` array of two or more. Turns replay: each call re-sends the whole exchange so far, because the runner uses `--no-session-persistence` and there is no session to resume. Replay is also the more reproducible option, since every turn is rebuilt from recorded text rather than from provider-side state.
+
+Turn 1 of a multi-turn case produces the identical prompt string a single-turn case would, so rows recorded before multi-turn support stay comparable. A multi-turn row carries a `transcript` array alongside `response`; `response` remains the final reply, and `cost_usd` covers the whole conversation.
+
+Multi-turn is what makes continuity measurable at all: re-entry after a gap, state surviving an interruption, and what a reader is left holding when they stop mid-task. None of that is visible in a single turn. Note the limit — with no write tools in the runner, these cases measure whether a response *directs* state somewhere durable, not whether a durable artifact was created.
+
 ## Judge and score
 
 Blind the `condition` field before judging. Write one JSON object per response with these fields:

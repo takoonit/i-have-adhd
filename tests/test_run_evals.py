@@ -21,6 +21,41 @@ class EvaluationHarnessTest(unittest.TestCase):
         self.assertGreaterEqual(len(cases), 12)
         self.assertGreaterEqual(len({case["category"] for case in cases}), 8)
 
+    def test_multi_turn_cases_are_validated_and_expanded(self):
+        base = {"id": "c", "category": "continuity", "risk": "low", "criteria": ["x"]}
+
+        self.assertEqual([], run_evals.validate_cases([{**base, "turns": ["a", "b"]}]))
+        self.assertEqual(["a", "b"], run_evals.case_turns({**base, "turns": ["a", "b"]}))
+        self.assertEqual(["a"], run_evals.case_turns({**base, "prompt": "a"}))
+
+        for bad, expected in (
+            ({}, "exactly one of prompt or turns"),
+            ({"prompt": "a", "turns": ["a", "b"]}, "exactly one of prompt or turns"),
+            ({"turns": ["a"]}, "list of 2 or more"),
+            ({"turns": ["a", "  "]}, "non-empty string"),
+        ):
+            with self.subTest(bad=bad):
+                errors = run_evals.validate_cases([{**base, **bad}])
+                self.assertTrue(
+                    any(expected in error for error in errors), errors
+                )
+
+    def test_replay_prompt_leaves_the_first_turn_byte_identical(self):
+        """Rows recorded before multi-turn support must stay comparable."""
+        skill = ROOT / "skills" / "i-have-adhd" / "SKILL.md"
+        for condition, path in (("baseline", None), ("candidate", skill)):
+            with self.subTest(condition=condition):
+                self.assertEqual(
+                    run_evals._condition_prompt("ask", condition, path),
+                    run_evals._replay_prompt([], "ask", condition, path),
+                )
+
+        later = run_evals._replay_prompt([("q1", "a1")], "q2", "baseline", None)
+        self.assertIn("<user>\nq1\n</user>", later)
+        self.assertIn("<you>\na1\n</you>", later)
+        self.assertIn("<user>\nq2\n</user>", later)
+        self.assertLess(later.index("q1"), later.index("q2"))
+
     def test_score_summary_applies_weights_and_release_gates(self):
         scores = []
         for condition, value in (("baseline", 3), ("candidate", 4)):
