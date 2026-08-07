@@ -381,7 +381,49 @@ in a single turn. Whether that artifact actually helps a reader return three day
 cannot be scored at all, because every case in the catalogue is turn one. That ceiling
 is the largest remaining gap in the eval, and it is larger than any rule.
 
-## 11. What would falsify this
+## 11. Continuity results, and an ablation that deflates the amendment
+
+Four multi-turn cases, 3 trials, baseline against candidate, scored by the independent
+judge that had no knowledge of the ruleset. 24 conversations, $3.68.
+
+| | correctness | autonomy | actionability | safety | concision | weighted | blockers |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| baseline | 4.33 | 3.08 | 3.17 | 5.00 | 3.58 | **3.78** | 0 |
+| candidate | 4.67 | 4.25 | 4.42 | 5.00 | 4.33 | **4.51** | 0 |
+
+All four cases favour the candidate: `state-across-interruption` +0.93,
+`handoff-record` +0.93, `re-entry-after-gap` +0.70, `abandoned-and-returning` +0.37. The
++0.73 total is within noise of the single-turn delta (+0.69 on the same judge), which is
+mild evidence the ruleset's advantage is not confined to formatting. Zero blockers in
+either condition, against 18 across the single-turn set — the continuity prompts give an
+agent much less occasion to invent tool output.
+
+**The ablation.** Running the same four cases against the skill with rule 5 in its
+*pre-amendment* form isolates what the amendment itself bought. On `handoff-record`, the
+case written to exercise it, counting whether the reply directs the stopping point into
+something findable later:
+
+| condition | directs a durable record |
+|---|---|
+| baseline, no skill | 0 of 3 |
+| comparator, skill with the old rule 5 | 2 of 3 |
+| candidate, skill with the amendment | 3 of 3 |
+
+The skill was already doing most of this work. Two of three comparator trials wrote out
+a note to save without being told to — one of them a full code block with the target
+backoff shape. The amendment moves 2 of 3 to 3 of 3, at n = 3, which is not a result.
+
+Stated plainly: **the continuity win belongs to the ruleset, not to the amendment.** The
+amendment is consistent with the evidence in section 10 and it did not make anything
+worse, and that is the whole of what can be claimed for it. The honest reading of
+sections 10 and 11 together is that the sources correctly identified where the leverage
+is, and the skill had already partly captured it before this document went looking.
+
+**What would settle it.** A larger n on `handoff-record` alone — the arms differ by one
+trial, so 10 trials per arm (about $6) would separate a real effect from a coin flip.
+That has not been run.
+
+## 12. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
