@@ -61,15 +61,15 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 
 10 rules. Full text in [SKILL.md](./skills/i-have-adhd/SKILL.md).
 
-1. Lead with the next action.
+1. Lead with the next action, startable in under two minutes.
 2. Number multi-step tasks.
 3. End with one concrete next step.
 4. Suppress tangents.
 5. Restate state every turn.
-6. Specific time estimates (minutes, not "a bit").
+6. Specific time estimates, per step (minutes, not "a bit"; never clock times).
 7. Make wins visible.
-8. Matter-of-fact errors.
-9. Cap lists at 5 items.
+8. Matter-of-fact errors. State, not blame.
+9. Cap lists at 5 items, choices at 3.
 10. No preamble. No recap. No closers.
 
 ## Tune it

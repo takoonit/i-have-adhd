@@ -130,7 +130,10 @@ class EvaluationHarnessTest(unittest.TestCase):
                 json.dumps(
                     {
                         "stub": {
-                            "command": ["sh", "-c", f"touch {marker} && echo hi"],
+                            # as_posix(): sh eats the backslashes in a Windows path,
+                            # so `touch` would create a junk file in the runner's cwd
+                            # (the repo root) instead of the temp dir.
+                            "command": ["sh", "-c", f"touch '{marker.as_posix()}' && echo hi"],
                             "response_format": "text",
                         }
                     }
