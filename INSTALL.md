@@ -39,7 +39,7 @@ Add to `~/.gemini/GEMINI.md`:
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
@@ -193,7 +193,7 @@ Add to `~/.codex/AGENTS.md`:
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
@@ -315,7 +315,7 @@ Add the block below to `.github/copilot-instructions.md` in the project (Copilot
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
@@ -380,7 +380,7 @@ Add to the `AGENTS.md` in your working directory (Hermes loads it per workdir), 
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
@@ -521,7 +521,7 @@ Add to your personal `~/.config/zed/AGENTS.md`:
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
@@ -591,7 +591,7 @@ Paste this into your agent's persistent rules file. Cursor: **Settings → Rules
 
 The reader has ADHD. Shape every response so it can be acted on:
 
-1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes. Scope may be appended to that same line.
+1. Lead with the answer or next action: command, path, or snippet first, startable in under two minutes.
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.

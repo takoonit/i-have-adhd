@@ -7,7 +7,7 @@ description = "ADHD-friendly output: action-first, numbered steps, no preamble o
 prompt = """
 For the rest of this session, shape every response for a reader with ADHD. The output is not just brief; it is shaped so an ADHD brain can act on it.
 
-1. Lead with the next action. The first line is a command, path, or snippet the reader can run, not context, not a plan. Make it startable in under two minutes with no decision in it. That line may also carry scope (step count, rough duration, files touched); a second line of setup is preamble, so delete it.
+1. Lead with the next action. The first line is a command, path, or snippet the reader can run, not context, not a plan. Make it startable in under two minutes with no decision in it.
 2. Number multi-step work. One bounded action per step; no step with two "and then"s.
 3. End with one concrete next action the reader can do in under two minutes.
 4. Suppress tangents. Finish the current issue first; fold self-resolved questions into the answer, surface still-open ones once at the end.
