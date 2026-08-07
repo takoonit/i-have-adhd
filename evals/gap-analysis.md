@@ -263,7 +263,62 @@ content that does not match the response under that tag. The aggregate is consis
 with judge 1 (r = 0.90) and is what the table above rests on; the individual notes on
 that case are not reliable.
 
-## 9. What would falsify this
+## 9. Source quality, and two retractions
+
+The sections above lean on a source collection that mixes clinical literature with blog
+posts, coaching-service marketing, YouTube transcripts, single case narratives and
+Reddit threads. Graded against clinical sources, the claims do not all hold at the same
+strength.
+
+**Strong enough to build a rule on.**
+
+- **Externalize at the point of performance.** Barkley's model treats ADHD as a disorder
+  of self-regulation and holds that the effective intervention is putting information
+  into physical form *in the environment, where the action happens* — not conveying it.
+  This is the most canonical finding in the set and the one the current skill least
+  satisfies: a chat message is not the point of performance.
+- **The gap is intention to action, not knowledge to intention.** Ramsay and Rostain —
+  the authors this repo already credits — build their CBT around the report "I know
+  exactly what I need to do, but I just cannot make myself do it," and title the
+  approach around turning intentions into actions. The skill's own premise 2 says this;
+  its rules then optimise the knowledge half.
+- **Structured psychosocial intervention works for adult ADHD.** CBT meta-analysis over
+  14 RCTs shows benefit on core symptoms and executive function. A telehealth
+  metacognitive RCT (n=46) held gains at three months. ADHD coaching for adults has a
+  prospective study with medium-to-large effects on symptoms, executive function and
+  functional impairment — weaker than the CBT evidence, not nothing.
+
+**Real phenomenon, contested label.** Rejection sensitive dysphoria is not in DSM-5, has
+no standardised criteria, and few studies use the term. Rejection sensitivity and
+emotional dysregulation in ADHD *are* research-validated. The rule 8 amendment survives
+on emotional-dysregulation grounds; the sections above should not have cited "RSD" as
+though it were established, and the term is doing more work there than it has earned.
+
+**Too weak to have carried what it carried — retracted.**
+
+1. **"Rule 3 may be actively harmful."** Claimed on the strength of a comment in
+   r/ADHD_partners plus demand avoidance, which is not a diagnostic entity in DSM-5 or
+   ICD-11, whose systematic review (13 small, mostly parent-report studies) called the
+   evidence inconclusive, and which is criticised for attributing to the construct what
+   may be anxiety. There is a real signal — one 2020 study found ADHD predicted demand
+   avoidance better than autism did (r = 0.71) — but that is not grounds to call a core
+   rule harmful. Withdrawn. What survives is weaker and duller: ending every turn with a
+   demand is **unvalidated**, not harmful.
+2. **Body doubling as a model for agent presence.** Controlled studies have not shown
+   conclusive effects; the underlying mechanism (social facilitation) is old and solid,
+   the practice is not validated. One 2025 VR study (n=12) found AI body doubles
+   comparable to human ones, which is suggestive and far too small to design against.
+
+**What the graded evidence actually points at.** Not three co-equal layers of stance,
+behaviour and delivery. Barkley and Ramsay converge on one thing: the intervention
+belongs at the point of performance, and the bottleneck is execution rather than
+comprehension. For a coding agent that means moving work out of the message and into
+the repository — making the edit, opening the file, writing the checklist where the work
+happens — so that the instruction shrinks or disappears. The stance material (never-say
+lists, warmth at re-entry) rests on tier-B and tier-C sources and should be written as a
+smaller, clearly-hedged section rather than as a co-equal third of the skill.
+
+## 10. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
