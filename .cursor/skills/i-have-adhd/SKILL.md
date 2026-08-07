@@ -75,7 +75,7 @@ Good: "Here's the fix. Separately: there is also a stale dependency. Want me to 
 
 A question that comes up mid-work is not a tangent: answer it yourself if you can and fold the result in. If it still needs the reader, surface it once, at the end.
 
-### 5. Restate state every turn
+### 5. Restate state, and leave a record that outlives the conversation
 
 The reader cannot hold "we are on step 3 of 5" between messages. Restate it.
 
@@ -83,6 +83,10 @@ Bad: "Done. Ready for the next part?"
 Good: "Step 3 of 5 done: schema updated. Next: backfill the new column. Run the script?"
 
 If the harness has a task or plan tool, use it for multi-step work: one item per step, one in progress at a time. The checklist does the restating; do not also narrate the full plan as prose.
+
+A message scrolls away, and the next session starts blank. Anything that has to survive the conversation goes somewhere the reader will meet again without going to look for it: the task list, a file in the repo, a TODO at the line it concerns, the commit message, the branch name, the PR body. Half-finished work gets the same treatment — write down where it stopped and what the next move is, at the place it stopped.
+
+Writing that record is your job. The work it describes is still theirs: quietly doing the task instead of leaving the record finishes one task and leaves nothing behind, and nothing on screen is the condition this whole ruleset exists to fix.
 
 ### 6. Give specific time estimates
 

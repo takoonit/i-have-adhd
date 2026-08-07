@@ -318,7 +318,70 @@ happens — so that the instruction shrinks or disappears. The stance material (
 lists, warmth at re-entry) rests on tier-B and tier-C sources and should be written as a
 smaller, clearly-hedged section rather than as a co-equal third of the skill.
 
-## 10. What would falsify this
+## 10. The decision: one rule, not a rebuild
+
+Two consultations settled it, and both pointed away from the rebuild.
+
+**The ADHD sources rank formatting last.** Asked to rank formatting inside a single
+interaction, a durable visible record of state between interactions, and the helper's
+emotional tone, the ranking came back: tone first, durable record second, formatting
+**third and lowest** for effect on whether a project is actually finished. The stated
+reason for third place is that a perfectly formatted answer is still abandoned when the
+task is forgotten for want of a visible record. The absent record is named as the most
+common reason a project is dropped midway.
+
+Every one of the ten rules governs formatting inside a single interaction. The skill is
+built entirely on the lowest-ranked lever.
+
+**But the fix is not "the agent does the work."** The same sources are direct that a
+helper who completes the task removes the active ingredient. The ADHD Creative Awareness
+Theory (Champ & Adamou, *J. Clin. Med.* 2024, peer-reviewed) classes reliance on another
+party for organisation and accountability as *self-absorption* — externally regulated,
+low autonomy, corrosive to self-concept, and reinforcing of learned helplessness. The
+mechanism is dual: offloading relieves working memory, visibility defeats object
+constancy. Work done quietly for someone satisfies neither. Scaffolding, not doing.
+
+**And the agent-instruction literature caps how much can be added at all.** The ETH
+Zurich evaluation of repository context files (Gloaguen et al., arXiv 2602.11988) found
+that agents *do* follow behavioural instructions — a named tool goes from under 0.01 to
+1.6 uses per instance — but that context files reduced task success by about 3% when
+LLM-generated and improved it about 4% when human-written, while adding over 20% to
+cost. Frontier models track roughly 150–200 instructions before compliance decays, and
+an agent platform's own system prompt consumes about 50. The recurring advice is to
+write less, not more.
+
+The same literature independently reproduces this run's own worst finding. When a rule
+assumes a capability the session lacks, the agent improvises rather than stopping: in
+the pharmaverse `{admiral}` repository an agent told to regenerate documentation could
+not run R in its sandbox, so it hand-wrote the generated file and presented it as
+output. That is the same failure as the fabricated `git clean` previews in section 6,
+arrived at from a completely different direction.
+
+**Decision.** Rule 5 is amended, and nothing is rebuilt. State that must outlive the
+conversation goes into something the reader meets again without looking for it — the
+task list, a file, a TODO at the line it concerns, the commit message, the branch name,
+the PR body — including where half-finished work stopped. Writing the record is the
+agent's job; the work stays the reader's.
+
+Rejected, with reasons:
+
+- **A stance layer.** It ranked first, but on the weakest evidence in the set (rejection
+  sensitive dysphoria, graded tier-B in section 9), and it would spend instruction budget
+  on unmeasurable text. The one part with a mechanism behind it is already in rule 8.
+- **A point-of-performance rebuild.** Contraindicated by the dependency finding, priced
+  at eighteen files plus ten translations plus the upstream path, and resting on an
+  analogy from whiteboards to coding agents that nobody has tested.
+- **Cutting rules to pay the instruction budget.** Probably correct on the ETH evidence,
+  and deliberately not done here. This document's own history is a record of what
+  unmeasured changes cost; cutting someone else's rules deserves its own measurement.
+
+**Testability, stated plainly.** The amended rule is only half-visible to this harness.
+Whether a response puts state into an artifact rather than only into prose can be scored
+in a single turn. Whether that artifact actually helps a reader return three days later
+cannot be scored at all, because every case in the catalogue is turn one. That ceiling
+is the largest remaining gap in the eval, and it is larger than any rule.
+
+## 11. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
