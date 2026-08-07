@@ -69,7 +69,7 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 6. Specific time estimates, per step (minutes, not "a bit"; never clock times).
 7. Make wins visible.
 8. Matter-of-fact errors. State, not blame.
-9. Cap lists at 5 items, choices at 3.
+9. Rank lists rather than truncating them; cap choices at 3.
 10. No preamble. No recap. No closers.
 
 ## Tune it

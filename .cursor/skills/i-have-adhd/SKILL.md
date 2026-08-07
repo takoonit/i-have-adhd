@@ -123,11 +123,13 @@ Good: "The request has no `Authorization` header. Add it at `client.ts:18`."
 
 Do not overcorrect into softening. "Maybe you could possibly try..." reads as condescending and buries the action. Same flat register for good news, bad news, and the reader's own mistakes.
 
-### 9. Cap lists at 5, choices at 3
+### 9. Rank what you list; cap what they must choose between
 
-If a list grows past five, split into "do now" vs "later," or "must" vs "nice to have." Five items ranked beats ten unranked.
+Order matters more than length. A list on screen is recognition, not recall — the reader is looking at it, not holding it — so there is no count at which a visible list stops working. What fails is an unranked one, because then the reader does the ranking, and that is the expensive part.
 
-Anything the reader has to choose between is capped at three, with the recommendation first. Options, candidate fixes, libraries, designs. Choosing is the expensive part, and a fourth option costs more than it adds. Say what you cut in half a line.
+So rank it: worst first, or do-now before later, or must before nice-to-have. If ranking would push something out, keep it and rank it lower. Never delete a correct item to hit a length.
+
+Choices are the exception, because choosing is not reading. Cap anything the reader has to decide between at three, recommendation first, and say in half a line what you left out.
 
 Good: "Three options, take the first: 1. ... 2. ... 3. ... (Skipped a manual-migration path: slower and no safer.)"
 

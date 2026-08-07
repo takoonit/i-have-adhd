@@ -423,7 +423,50 @@ is, and the skill had already partly captured it before this document went looki
 trial, so 10 trials per arm (about $6) would separate a real effect from a coin flip.
 That has not been run.
 
-## 12. What would falsify this
+## 12. Rules graded against measured reading research
+
+The ADHD sources justify *why* the rules exist. They do not say whether each rule's
+specific mechanic has ever been measured. Graded against reading and cognitive-load
+research:
+
+| Rule | Evidence | Source |
+| --- | --- | --- |
+| 2. Number multi-step work | **Strongest in the set.** Reformatting prose into scannable bullets measured +47% usability; with conciseness, +124%. Prescribed by name for ADHD readers. | NN/g eye-tracking; W3C Cognitive Accessibility WG (Seeman-Horowitz) |
+| 1. Lead with the action | **Strong.** F-shaped scanning; users read the first two words of a line and skip the rest if they carry no information; inverted pyramid aids comprehension. | NN/g eye-tracking |
+| 3. End with one next action | **Weak as a universal.** Closing calls-to-action have "weak and conflicting empirical backing" applied universally; for complex tasks a CTA *after* supporting context does better. The end position is privileged for recall (serial position effect), so something belongs there — a mandatory action is the unsupported part. | CTA placement studies; Ebbinghaus |
+| 9. Cap lists at 5 | **Folklore.** Miller's 7±2 governs *recall*. A list on screen is *recognition*. Menu-performance modelling and absolute-identification experiments find Hick's Law log-linear to 20 visible alternatives; there is no count at which a visible list collapses. | Cockburn, Gutwin & Greenberg (2007); Hawkins et al. (2012) |
+| 9b. Cap choices at 3 | Survives. Choosing is not reading: decision time grows with the number of alternatives, and the ADHD sources add decision paralysis on top. | Hick–Hyman; ADHD sources, tier-B |
+
+Rule 9 was half misapplied cognitive science. It has been rewritten around **ranking**,
+which the evidence supports, instead of a length cap, which it does not — while keeping
+the choice cap, which survives on a different mechanism.
+
+**Ablated, cap against rank, on the two list cases, 3 trials each ($0.99).** Counting
+list items produced:
+
+| | list-overflow | choice-overload |
+| --- | --- | --- |
+| cap at 5 / choices at 3 | 5, 5, 9 | 8, 3, 3 |
+| rank / choices at 3 | 9, 9, 7 | 3, 3, 3 |
+
+Two effects, both in the intended direction. On `list-overflow` the ranking arm keeps
+seven to nine correct items instead of five, all ordered worst-first, so nothing correct
+is dropped and the reader still is not left to rank. On `choice-overload` the choice cap
+became *more* reliable once it stopped competing with a second number in the same rule —
+3 of 3 rather than 2 of 3.
+
+n = 3, and item counts are objective while quality is not judged here. But this is the
+first change in this document with both a mechanism and a directional signal on the
+metric it targets, rather than a plausible edit that measured flat.
+
+**Method note.** The ablation procedure now used twice here is the one the agent-config
+literature prescribes: run identical tasks with and without the target instruction,
+10+ runs per pattern, and delete anything whose removal changes nothing. The governing
+question, from the author of Claude Code, is "would the agent make a mistake without
+this rule? If not, delete it." Rules 3 and 7 have not been through it and are the next
+candidates.
+
+## 13. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
