@@ -185,6 +185,7 @@ class EvaluationHarnessTest(unittest.TestCase):
                 retries=0,
                 budget_usd=1.0,
                 allow_unmetered=False,
+                model=None,
                 output=tmp_path / "out.jsonl",
             )
 
@@ -199,19 +200,36 @@ class EvaluationHarnessTest(unittest.TestCase):
             self.assertTrue(marker.exists())
 
     def test_completed_keys_support_resuming_partial_runs(self):
-        rows = [
-            {
-                "case_id": "direct-answer",
-                "trial": 1,
-                "condition": "baseline",
-                "runner": "claude",
-            }
-        ]
+        row = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+               "runner": "claude", "model": "m1"}
 
         self.assertEqual(
-            {("direct-answer", 1, "baseline", "claude")},
-            run_evals.completed_keys(rows),
+            {("direct-answer", 1, "baseline", "claude", "m1")},
+            run_evals.completed_keys([row], "m1"),
         )
+
+    def test_resume_does_not_reuse_rows_from_another_model(self):
+        """A case answered by a different model is a different run, not a completed one."""
+        row = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+               "runner": "claude", "model": "m1"}
+        done = run_evals.completed_keys([row], "m2")
+
+        self.assertNotIn(("direct-answer", 1, "baseline", "claude", "m2"), done)
+
+    def test_legacy_rows_without_a_model_are_backfilled(self):
+        """Files written before results carried a model came from the configured pin."""
+        legacy = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+                  "runner": "claude"}
+
+        self.assertIn(
+            ("direct-answer", 1, "baseline", "claude", "pinned"),
+            run_evals.completed_keys([legacy], "pinned"),
+        )
+
+    def test_resolve_model_reads_the_pin_from_the_command(self):
+        self.assertEqual("x", run_evals.resolve_model(["claude", "--model", "x", "p"]))
+        self.assertEqual("unpinned", run_evals.resolve_model(["claude", "--print"]))
+        self.assertEqual("unpinned", run_evals.resolve_model(["claude", "--model"]))
 
 
 if __name__ == "__main__":

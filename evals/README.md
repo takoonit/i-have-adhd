@@ -42,6 +42,46 @@ Isolation also drops the operator's saved model and effort settings, so the clau
 
 Runs are resumable: rerun the same command after a provider failure and completed `(case, trial, condition, runner)` rows are skipped. Each incomplete call is retried twice by default, and the final provider error is preserved.
 
+## Models: sweep, do not pin and forget
+
+Every finding here is a property of the model that produced it, not of the rule. The
+governing question — would the agent do this without the instruction? — has a different
+answer per model, and models keep shipping.
+
+Measured on this repo's own cases: rule 3 (end with a next action) collapses from 8 of 9
+to 1 of 9 when removed on one model, and moves 3 of 3 to 2 of 3 on a leaner one, because
+the leaner model already ends on a next step unprompted. **A rule's value scales with how
+much the base model over-explains.** Two consequences:
+
+1. A rule earns its place if **any** supported model needs it. Redundancy must be shown
+   on the most verbose model in scope, never the leanest, or you will delete rules the
+   verbose model depends on.
+2. Results decay. A pin that was current when the numbers were taken is a footnote a year
+   later, and the skill ships to Claude, Gemini, Codex, Cursor, Kimi, Qwen and Pi.
+
+`--model` overrides a runner's pin without editing the config, so a sweep is a loop:
+
+```bash
+for m in <model-a> <model-b> <model-c>; do
+  python3 scripts/run_evals.py run --runner claude --model "$m" \
+    --condition candidate --condition-skill skills/i-have-adhd/SKILL.md \
+    --trials 3 --budget-usd 12.50 --output evals/results/responses.jsonl
+done
+```
+
+Every result row records the `model` that produced it, and the model is part of the
+resume key — the same case under a different model is a different run, not a completed
+one. Rows written before this existed carry no `model` and are backfilled with whatever
+the runner is configured with, which is what produced them in any file where the pin has
+not moved.
+
+The pin in `runners.example.json` is a default so a bare command works, not a statement
+that it is the right model to test.
+
+**Known gap:** the skill ships adapters for Gemini and OpenAI-style agents
+(`skills/i-have-adhd/agents/`), and there is a `codex` runner, but every number recorded
+so far came from Claude runners. Cross-*vendor* behaviour is unmeasured.
+
 ## Multi-turn cases
 
 A case carries either a single `prompt` or an ordered `turns` array of two or more. Turns replay: each call re-sends the whole exchange so far, because the runner uses `--no-session-persistence` and there is no session to resume. Replay is also the more reproducible option, since every turn is rebuilt from recorded text rather than from provider-side state.

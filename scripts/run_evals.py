@@ -45,10 +45,32 @@ def load_cases(path: Path = DEFAULT_CASES) -> list[dict[str, Any]]:
     return read_jsonl(path)
 
 
-def completed_keys(rows: list[dict[str, Any]]) -> set[tuple[str, int, str, str]]:
-    keys: set[tuple[str, int, str, str]] = set()
+def resolve_model(command: list[str]) -> str:
+    """The model a runner will actually use, so results can say which one made them."""
+    try:
+        return command[command.index("--model") + 1]
+    except (ValueError, IndexError):
+        return "unpinned"
+
+
+def completed_keys(
+    rows: list[dict[str, Any]], default_model: str = "unpinned"
+) -> set[tuple[str, int, str, str, str]]:
+    """Model is part of the key: the same case under a different model is a different run.
+
+    Rows written before results carried a `model` field are backfilled with the model
+    currently configured, which is what produced them in any file where the pin has not
+    moved — the only way such a file can exist.
+    """
+    keys: set[tuple[str, int, str, str, str]] = set()
     for row in rows:
-        fields = (row.get("case_id"), row.get("trial"), row.get("condition"), row.get("runner"))
+        fields = (
+            row.get("case_id"),
+            row.get("trial"),
+            row.get("condition"),
+            row.get("runner"),
+            row.get("model", default_model),
+        )
         if isinstance(fields[0], str) and isinstance(fields[1], int) and all(
             isinstance(value, str) for value in fields[2:]
         ):
@@ -270,6 +292,12 @@ def run_evaluations(args: argparse.Namespace) -> int:
     config = json.loads(args.runner_config.read_text(encoding="utf-8"))
     runner = config[args.runner]
     command = list(runner["command"])
+    if args.model:
+        if "--model" in command:
+            command[command.index("--model") + 1] = args.model
+        else:
+            command += ["--model", args.model]
+    model = resolve_model(command)
     response_format = runner.get("response_format", "text")
     if response_format != "claude-json" and not args.allow_unmetered:
         raise RuntimeError(
@@ -278,11 +306,12 @@ def run_evaluations(args: argparse.Namespace) -> int:
         )
     reported_cost = 0.0
     prior_rows = read_jsonl(args.output) if args.output.exists() else []
-    done = completed_keys(prior_rows)
+    done = completed_keys(prior_rows, model)
     reported_cost = sum(
         float(row.get("cost_usd") or 0)
         for row in prior_rows
         if row.get("condition") == args.condition and row.get("runner") == args.runner
+        and row.get("model", model) == model
     )
 
     if args.budget_usd <= 0 or args.budget_usd > 25:
@@ -294,7 +323,7 @@ def run_evaluations(args: argparse.Namespace) -> int:
             for case in cases:
                 if args.case and case["id"] not in args.case:
                     continue
-                key = (case["id"], trial, args.condition, args.runner)
+                key = (case["id"], trial, args.condition, args.runner, model)
                 if key in done:
                     print(f"skip completed {args.condition} trial {trial}: {case['id']}")
                     continue
@@ -366,6 +395,7 @@ def run_evaluations(args: argparse.Namespace) -> int:
                     "trial": trial,
                     "condition": args.condition,
                     "runner": args.runner,
+                    "model": model,
                     # `response` stays the last reply so single-turn consumers and
                     # every previously recorded row keep the same shape.
                     "response": history[-1][1],
@@ -404,6 +434,11 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     run.add_argument("--runner-config", type=Path, default=ROOT / "evals" / "runners.example.json")
     run.add_argument("--runner", required=True)
+    run.add_argument(
+        "--model",
+        help="Override the runner's pinned model. Findings are model-scoped: sweep the "
+             "models you ship to rather than trusting one pin.",
+    )
     run.add_argument("--condition", choices=sorted(CONDITIONS), required=True)
     run.add_argument("--condition-skill", type=Path)
     run.add_argument("--case", action="append")
