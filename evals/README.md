@@ -64,10 +64,19 @@ much the base model over-explains.** Two consequences:
 ```bash
 for m in <model-a> <model-b> <model-c>; do
   python3 scripts/run_evals.py run --runner claude --model "$m" \
+    --condition baseline \
+    --trials 3 --budget-usd 12.50 --output evals/results/responses.jsonl
+
+  python3 scripts/run_evals.py run --runner claude --model "$m" \
     --condition candidate --condition-skill skills/i-have-adhd/SKILL.md \
     --trials 3 --budget-usd 12.50 --output evals/results/responses.jsonl
 done
 ```
+
+**Sweep both conditions for every model, never the candidate alone.** Scoring a candidate
+run from one model against a baseline recorded under another moves two variables at once,
+and the release gate cannot catch it: `score` pairs on `(case, trial)` and does not look
+at the model field.
 
 Every result row records the `model` that produced it, and the model is part of the
 resume key — the same case under a different model is a different run, not a completed

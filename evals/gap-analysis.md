@@ -1,5 +1,12 @@
 # Rule-to-evidence gap analysis
 
+> **How to read this file.** It is an append-only research log, kept in the order the
+> work happened, so earlier sections state things that later sections revise or retract.
+> Sections 1–6 in particular describe a 20-case catalogue and five unmeasured amendments;
+> both were superseded. For the current state of any rule, read
+> `changes-vs-upstream.md`, which is maintained as a snapshot. Use this file for *why* a
+> change was made and what was tried, not for what is true now.
+
 Dated 2026-08-07, against `2d19ad2`. Inputs: two ADHD source collections (NotebookLM,
 113 sources across "Optimizing the ADD Brain" and "The Hidden Realities of Adult ADHD")
 mapped onto the ten rules in `skills/i-have-adhd/SKILL.md` and the case catalog in

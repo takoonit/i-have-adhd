@@ -50,7 +50,9 @@ def resolve_model(command: list[str]) -> str:
     try:
         return command[command.index("--model") + 1]
     except (ValueError, IndexError):
-        return "unpinned"
+        # Distinct providers must not share one identity just because neither pins a
+        # model: "unpinned" alone would let a codex row satisfy a claude resume key.
+        return f"unpinned:{command[0]}" if command else "unpinned"
 
 
 def completed_keys(
@@ -64,6 +66,8 @@ def completed_keys(
     """
     keys: set[tuple[str, int, str, str, str]] = set()
     for row in rows:
+        if row.get("incomplete"):
+            continue
         fields = (
             row.get("case_id"),
             row.get("trial"),
@@ -107,6 +111,9 @@ def validate_cases(cases: list[dict[str, Any]]) -> list[str]:
             if not all(isinstance(turn, str) and turn.strip() for turn in turns):
                 errors.append(f"Case {case['id']}: every turn must be a non-empty string")
                 continue
+        if has_prompt and not (isinstance(case["prompt"], str) and case["prompt"].strip()):
+            errors.append(f"Case {case['id']}: prompt must be a non-empty string")
+            continue
         case_id = case["id"]
         if not isinstance(case_id, str) or not case_id:
             errors.append(f"Case {index}: id must be a non-empty string")
@@ -333,6 +340,19 @@ def run_evaluations(args: argparse.Namespace) -> int:
                 for turn_text in case_turns(case):
                     remaining = args.budget_usd - reported_cost
                     if remaining <= 0:
+                        # Turns already paid for must be recorded even though the
+                        # conversation is unusable, or the next resume double-spends.
+                        if history:
+                            destination.write(json.dumps({
+                                "case_id": case["id"], "trial": trial,
+                                "condition": args.condition, "runner": args.runner,
+                                "model": model, "response": history[-1][1],
+                                "usage": usage, "cost_usd": case_cost,
+                                "incomplete": True,
+                                "turns_completed": len(history),
+                                "turns_expected": len(case_turns(case)),
+                            }, ensure_ascii=False) + "\n")
+                            destination.flush()
                         print("Budget exhausted; stopping.", file=sys.stderr)
                         return 2
                     prompt = _replay_prompt(

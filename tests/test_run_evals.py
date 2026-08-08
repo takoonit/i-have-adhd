@@ -228,8 +228,30 @@ class EvaluationHarnessTest(unittest.TestCase):
 
     def test_resolve_model_reads_the_pin_from_the_command(self):
         self.assertEqual("x", run_evals.resolve_model(["claude", "--model", "x", "p"]))
-        self.assertEqual("unpinned", run_evals.resolve_model(["claude", "--print"]))
-        self.assertEqual("unpinned", run_evals.resolve_model(["claude", "--model"]))
+        self.assertEqual("unpinned:claude", run_evals.resolve_model(["claude", "--print"]))
+        self.assertEqual("unpinned:claude", run_evals.resolve_model(["claude", "--model"]))
+
+    def test_unpinned_runners_do_not_share_one_identity(self):
+        """Two providers that both omit --model are not the same model."""
+        self.assertNotEqual(
+            run_evals.resolve_model(["codex", "exec"]),
+            run_evals.resolve_model(["claude", "--print"]),
+        )
+
+    def test_incomplete_rows_never_satisfy_a_resume_key(self):
+        """A conversation cut off by the budget must be re-run, not counted as done."""
+        row = {"case_id": "c", "trial": 1, "condition": "baseline", "runner": "r",
+               "model": "m", "incomplete": True}
+
+        self.assertEqual(set(), run_evals.completed_keys([row], "m"))
+
+    def test_null_or_blank_prompt_is_rejected(self):
+        """A null prompt used to reach subprocess.run as None."""
+        base = {"id": "c", "category": "x", "risk": "low", "criteria": ["y"]}
+        for bad in (None, "", "   "):
+            with self.subTest(prompt=bad):
+                errors = run_evals.validate_cases([{**base, "prompt": bad}])
+                self.assertTrue(any("non-empty string" in e for e in errors), errors)
 
 
 if __name__ == "__main__":
