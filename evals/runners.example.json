@@ -10,10 +10,10 @@
       "--no-session-persistence",
       "--setting-sources",
       "",
-      "--model",
-      "claude-opus-4-8",
       "--tools",
-      ""
+      "",
+      "--model",
+      "claude-opus-4-8"
     ],
     "response_format": "claude-json",
     "budget_flag": "--max-budget-usd"

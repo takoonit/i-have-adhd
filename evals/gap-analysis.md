@@ -653,7 +653,55 @@ those still stands and is still the reason not to overclaim. But with real write
 and a clean control, the behaviour appears only in the skill arm, and it appears every
 time.
 
-## 17. What would falsify this
+## 17. Cross-model: does the ruleset hold off `claude-opus-4-8`?
+
+Every result above came from one model — `claude-opus-4-8`, which was upstream's pin, not
+a choice made here. That matters more than it sounds, because the litmus test this
+document leans on ("would the agent make a mistake without this rule?") is a question
+about a *model*, not about a rule. Rules kept despite a null cost only instruction
+budget. **The one rule removed on single-model evidence — rule 7, merged into rule 5 —
+could have broken the skill for anyone on a weaker model.** That is the change worth
+testing, so it is the one tested.
+
+Pre-merge skill (10 rules) against current (9), diff confined to rules 5 and 7, on the
+two cases that exercise "make wins visible". Three models, 3 trials, 36 calls, $2.36.
+
+| model | pre-merge | current |
+| --- | --- | --- |
+| Haiku 4.5 | 3 of 6 | 3 of 6 |
+| Sonnet 5 | 6 of 6 | 5 of 6 |
+| Opus 5 | 5 of 6 | 5 of 6 |
+
+**The merge is neutral on all three.** Identical on Haiku, one lower on Sonnet, level on
+Opus — inside noise at n = 6 per cell. The shipped change is safe, and by extension the
+redundancy-pruning method survives its first cross-model check.
+
+Haiku's lower total is not about rule 7. It is entirely `multi-step-progress`, 0 of 3 in
+both arms, which is the same refusal artifact recorded in section 6: the runner executes
+inside a real repository, and the weakest model most often declines the hypothetical
+rather than using the state the prompt supplies. On `partial-success`, which has no such
+trap, Haiku scores 3 of 3 in both arms — the same as Opus.
+
+**Still untested cross-model:** every other finding here, including rule 3's 8-of-9 to
+1-of-9 collapse and rule 9's closer effect. Those rules were *kept*, so the risk is
+bounded, but the ablation numbers should be read as properties of `claude-opus-4-8`
+until someone repeats them.
+
+**A latent bug in the runner config, fixed.** `--tools <tools...>` is variadic, so
+`--tools "" <prompt>` makes the CLI swallow the prompt and fail with "Input must be
+provided". Upstream's config only worked because `--max-budget-usd` is inserted between
+them at runtime; anyone dropping the budget flag hit a confusing failure. `--tools` now
+precedes `--model`, so a non-variadic flag always ends the list. Verified by invoking
+both Claude runners with no budget flag.
+
+**Metric error, the fourth.** The first pass reported Haiku at 0 of 6 pre-merge and 1 of
+6 current, which read as "the weakest model ignores this rule entirely". It was wrong:
+Haiku marks completed work with `✓` (U+2713) and the detector only matched `✅`. Every
+false reading in this document — three of them before this one — has the same shape: a
+counter run over text that nobody read. The rule that follows is not optional. **Print
+samples before believing a count**, especially a count that says zero.
+
+## 18. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
