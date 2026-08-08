@@ -58,6 +58,18 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 8. Rank lists rather than truncating them; cap choices at 3.
 9. No preamble. No recap. No closers.
 
+## What's measured, and what isn't
+
+Every rule has been **ablated** — deleted one at a time, the same prompts re-run, the difference counted. Seven of nine measurably change what the model writes. Removing rule 3 takes closing actions from 8 of 9 replies to 1 of 9. Two rules show no effect and are kept anyway: a rule a verbose model needs is not redundant because a terse one doesn't.
+
+What has **not** been measured: whether any of it helps a reader. Every number here is a property of generated text, not of a person. A literature sweep found nobody else has measured it either — the two closest trials in adults with ADHD both came back null.
+
+The six facts the rules are built on were graded against clinical research. **Five of six did not survive.** Four have been rewritten to what the evidence supports, and measurably changed nothing about the output — which is its own finding. The fifth is still open: the first attempt at rewriting it cut time-estimate density by a third, so it was reverted and is being retested.
+
+So: these are writing conventions with demonstrated effects on model output. Anything stronger is unearned, and this project will not claim it.
+
+Receipts, including every retraction and eight metric errors: [evals/gap-analysis.md](./evals/gap-analysis.md).
+
 ## Tune it
 
 Fork, edit `skills/i-have-adhd/SKILL.md`, then swap your copy in:
@@ -74,6 +86,8 @@ Restart Claude Code, then re-invoke `/i-have-adhd`.
 ## Credits
 
 Loosely based on *The Adult ADHD Tool Kit* by J. Russell Ramsay and Anthony L. Rostain. Adapted for how an LLM should respond, not how a human should organize their day.
+
+Not medical advice, and not a clinical tool. It is a writing style.
 
 ## License
 
