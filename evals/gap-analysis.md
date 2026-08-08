@@ -701,7 +701,77 @@ false reading in this document — three of them before this one — has the sam
 counter run over text that nobody read. The rule that follows is not optional. **Print
 samples before believing a count**, especially a count that says zero.
 
-## 18. What would falsify this
+## 18. Rules 3 and 9 on Haiku — the effects do not reproduce, and that is fine
+
+24 calls, $0.63, `claude-haiku-4-5-20251001`, same leave-one-out construction as
+section 14. Counted by hand after the automated counter failed again; see below.
+
+**Rule 3, ends with a concrete action.** On `partial-success`, the case with no repo
+trap: control 3 of 3, ablated 2 of 3. On `debugging-cause` both arms derailed into
+"which test file?" and "should I search the repo?" — the refusal artifact again, so that
+case is uninformative on this model. Against `claude-opus-4-8`, where the same ablation
+gave 8 of 9 against 1 of 9, the effect is essentially gone.
+
+**Rule 9, no preamble or closers.** Indistinguishable. All six `casual-message` replies
+in both arms are a variant of "Glad it's working. What's next?" All six
+`concept-explanation` replies in both arms open on a heading, with no preamble anywhere.
+On Opus the same ablation moved closers from 0 of 3 to 3 of 3.
+
+**Why this is not a failure of the skill.** Two readings fit a null: the model ignores
+the rules, or the model already behaves that way. The control arms settle it — Haiku's
+*unassisted* output is already terse, already opens on the answer, already ends on a next
+step. It has nothing to strip. Opus 4.8's defaults are more verbose, so the rules have
+something to do there.
+
+The rules' value scales with how much the base model over-explains. That has a direct
+consequence for method, and it runs opposite to the assumption in section 17:
+
+- Pruning a rule because a **strong** model does not need it risks the weak-model case —
+  which is why the rule 7 merge was checked cross-model and passed.
+- Pruning a rule because a **weak** model does not need it would be worse, because the
+  verbose model is the one the rule exists for. Rules 3 and 9 look redundant on Haiku and
+  must be kept regardless.
+
+So a rule earns its place if **any** supported model needs it. Redundancy has to be
+demonstrated on the most verbose model in scope, not the leanest.
+
+**Metric error, the fifth.** The action detector required a line to *begin* with "Next:"
+or an imperative, so it scored 1 of 6 for a control arm whose replies ended
+"...**Next:** Open `auth.spec.ts:42`..." and "...Add `Authorization: Bearer ${token}` to
+the request, then re-run the integration tests (~3 min)". Both are closing actions; one
+merely sits mid-line. The counts in the first pass were meaningless and the hand count
+replaces them. Fifth occurrence of the same failure.
+
+## 19. Scope: what this skill is for
+
+Recorded because it was never written down where the work could see it, and one change
+drifted past it.
+
+The skill is *loosely based on* **The Adult ADHD Tool Kit** (J. Russell Ramsay & Anthony
+L. Rostain), **adapted for how an LLM should respond to a person with ADHD — not how a
+person should organise their day.** Ramsay and Rostain's own CBT is built around "I know
+exactly what I need to do, but I just cannot make myself do it", which is the skill's
+fact 2; the target is acting on a response, not tidying a workspace.
+
+Most of this document respects that boundary, largely because the things that would have
+broken it were turned down: the three-layer stance/behaviour/delivery rewrite (§10), the
+coach-not-instructor framing with its "prep the ingredients" workflow, and the never-say
+list. Rules 1, 2, 3 and 9 are pure response shape; rule 8 governs how a list is written.
+
+**Rule 5's record clause is the exception and is out of scope as written.** "A file in the
+repo, a TODO at the line it concerns, the commit message, the branch name, the PR body"
+describes what an agent leaves in a workspace, not how it responds. It came from
+Barkley's point-of-performance model, which is a finding about human environment design,
+mapped onto agent side effects without checking it against this purpose. Its strongest
+evidence — 3 of 3 against 0 of 3 in §16 — measures artifacts on disk, which is precisely
+the part that does not belong. Its weakest evidence, the ablation in §11 showing the
+pre-amendment rule already reached 2 of 3, concerns the part that does.
+
+Pending a scope decision by the maintainer: either the clause narrows to response shape
+(restate state; say what now works and how to see it), or the skill's stated purpose
+widens to cover what the agent leaves behind. Not changed unilaterally.
+
+## 20. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
