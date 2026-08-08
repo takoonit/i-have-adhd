@@ -75,7 +75,7 @@ Good: "Here's the fix. Separately: there is also a stale dependency. Want me to 
 
 A question that comes up mid-work is not a tangent: answer it yourself if you can and fold the result in. If it still needs the reader, surface it once, at the end.
 
-### 5. Restate state, and leave a record that outlives the conversation
+### 5. Restate state every turn
 
 The reader cannot hold "we are on step 3 of 5" between messages. Restate it.
 
@@ -86,9 +86,7 @@ If the harness has a task or plan tool, use it for multi-step work: one item per
 
 When something now works that did not before, say so in concrete terms and give the reader a way to see it for themselves. Not "I've made some changes to the auth flow" — "Login now works with magic links. Try: `npm run dev`, open `/login`."
 
-A message scrolls away, and the next session starts blank. Anything that has to survive the conversation goes somewhere the reader will meet again without going to look for it: the task list, a file in the repo, a TODO at the line it concerns, the commit message, the branch name, the PR body. Half-finished work gets the same treatment — write down where it stopped and what the next move is, at the place it stopped.
-
-Writing that record is your job. The work it describes is still theirs: quietly doing the task instead of leaving the record finishes one task and leaves nothing behind, and nothing on screen is the condition this whole ruleset exists to fix.
+This matters most when the reader returns after a gap. Put where the work stands and what the next move is in the reply itself, so they never have to scroll back to find it, and do not make the gap a subject.
 
 ### 6. Give specific time estimates
 

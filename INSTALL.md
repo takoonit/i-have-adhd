@@ -43,7 +43,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
@@ -196,7 +196,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
@@ -317,7 +317,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
@@ -381,7 +381,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
@@ -521,7 +521,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
@@ -590,7 +590,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 2. Number multi-step work; one bounded action per step.
 3. End with one next action doable in under two minutes.
 4. Finish the current issue before raising a new one.
-5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and leave state that must outlive the chat in a file, TODO, commit message or task list.
+5. Restate progress each turn ("step 3 of 5 done"), show what now works and how to see it, and re-anchor the reader in the reply itself when they return after a gap.
 6. Give time estimates in concrete units, never "a bit". One per step, never as clock times.
 7. Errors: state location, cause, and fix. No drama, and no blame when the reader caused it.
 8. Rank every list; cap choices at 3.
