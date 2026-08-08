@@ -606,7 +606,54 @@ matched the word "backoff" inside its TODO comment. Excluding comment lines, no 
 either arm implemented backoff; all six respected the instruction. Three separate false
 readings in this document now trace to a counter run over text without looking at it.
 
-## 16. What would falsify this
+## 16. The clean re-run — and a reversal
+
+Section 15's experiment was rerun through `claude --print` instead of subagents, which
+removes the plugin contamination: 0 of 632 responses recorded through that path carry an
+output-style marker, and none of these six do either. Two other things changed with it —
+the model went back to `claude-opus-4-8`, matching every other measurement here, and the
+skill was **injected into context** rather than read from a file, which is how it
+actually ships. Six fresh copies of the same seeded project, same forced-handoff task,
+$0.67.
+
+| | durable record left on disk | guard implemented | backoff (stop respected) |
+| --- | --- | --- | --- |
+| control | **0 of 3** | 3 of 3 | none — all stopped |
+| skill | **3 of 3** | 3 of 3 | none — all stopped |
+
+Every skill-arm agent left a `TODO` above `connect()` naming the defect, why the current
+code is wrong, and the fix:
+
+```
+// TODO(handoff 2026-08-08): retry loop below busy-waits — setTimeout(fn,1000)
+// schedules a no-op and does NOT pause the loop. Replace with real exponential
+// backoff (e.g. await new Promise(r => setTimeout(r, base * 2 ** attempt))).
+```
+
+No control agent left anything. Their handoffs were good — clear, accurate, complete —
+and they were in the chat, which is the thing that disappears.
+
+**This reverses section 15.** That run found 1 of 6 and concluded the rule 5 record
+clause was close to inert once an agent could actually act. Under a clean control with
+the skill delivered the way it ships, it is 3 of 3 against 0 of 3 — the cleanest
+separation measured anywhere in this document. The earlier negative result was an
+artifact of a contaminated control and a weaker delivery, not a property of the rule.
+
+**What cannot be separated here.** Three things changed at once: contamination removed,
+model changed, delivery changed from "read this file" to injection. The delivery change
+is the most likely explanation on its own — an instruction the agent must choose to open
+and then remember is not the same instruction as one already in context — but this data
+cannot apportion it. Anyone wanting the clause's isolated effect should ablate rule 5's
+record paragraph against the full skill on this same runner.
+
+**Status change.** The record clause was, an hour ago, the weakest surviving change in
+this document: an ablation showed the pre-amendment rule already produced the behaviour
+2 times in 3 in text, and section 15 showed it barely happening with tools. The first of
+those still stands and is still the reason not to overclaim. But with real write tools
+and a clean control, the behaviour appears only in the skill arm, and it appears every
+time.
+
+## 17. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
