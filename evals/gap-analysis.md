@@ -1397,3 +1397,115 @@ metric already defined and the prediction being that time units per reply return
 - **F6's anti-softening half remains untested**, for the reason in §23.3: softening occurs
   in 0 of 78 control responses, so there is nothing to reduce.
 - **Nothing here measures a reader.** §22.4 still stands over all of it.
+
+## 25. The scope sentence, dropped before it cost anything
+
+§22.5 ranked a scope sentence for the facts preamble as the amendment with the only
+concrete harm behind it: five of the six facts are wrong, they sit in the model's context
+as assertions about people with ADHD, and a model that echoes them back tells a reader a
+false thing about themselves. The proposed metric was second-person mechanism
+attributions — "since your working memory…", "because dopamine…".
+
+**The harm does not occur.** Scanning all 262 stored responses across every run in this
+repository:
+
+| Pattern | Occurrences |
+| --- | --: |
+| "your working memory" / "your memory" | 0 / 262 |
+| "since/because/given that you have…" mechanism claims | 0 / 262 |
+| "your ADHD" / "because you have ADHD" | 0 / 262 |
+| "dopamine" or "your brain" | 3 / 262 |
+
+All three hits are on `medical-boundary`, and all three are the model **declining** to
+diagnose — "using this style proves nothing about your brain." That is the opposite of the
+behaviour the sentence would prevent. The 30 responses matching "ADHD" are matching the
+repository's own name in file paths.
+
+So the amendment is unfalsifiable in the same way §23.3 found F6's anti-softening clause
+to be: it predicts a decrease in something already at zero. By the standing test — would
+the agent make a mistake without this rule? — the answer on 262 responses is no, and by
+the ETH instruction-budget finding in §10 an inert instruction is a cost with no return.
+
+**Dropped before the run rather than after.** The arm had already been written and
+committed; checking headroom took one scan and no API spend. Recorded because the previous
+two sections both document the opposite order — §23.1 designed around a saturated metric
+and §24.1 selected a contaminated case — and this is the first amendment killed by a
+free check before money was spent on it.
+
+Two limits on the null. The 262 responses are overwhelmingly single-turn task prompts; a
+conversation that asks the model *why* it is formatting this way is the case most likely
+to elicit a mechanism claim, and `medical-boundary` is the only case in the catalogue that
+does, where the model already behaves correctly. And they were generated under the *old*
+fact wording — though the new wording is more hedged, not less, so the risk should be
+lower rather than higher.
+
+## 26. F4-v3 measures flat — and retracts §24's attribution
+
+24 calls, $2.17, same four clean cases, same metric, prediction recorded in §23.4 and
+§24.3 that time units per reply would return to about 6.
+
+**It did not, and the reason is that §24 blamed the wrong fact.**
+
+| Arm | Facts | complex-plan counts | time units per reply |
+| --- | --- | --- | --: |
+| run 1 control | all six original | 16, 18, 22 | **6.25** |
+| run 1 facts-v2 | five rewritten, incl. F4-v2 | 6, 6, 26 | 4.25 |
+| run 2 control | four rewritten, **F4 as shipped** | 4, 6, 22 | **4.17** |
+| run 2 F4-v3 | four rewritten, **F4-v3** | 10, 11, 21 | 4.33 |
+
+Control and F4-v3 are indistinguishable — 4.17 against 4.33. **F4's wording does not drive
+estimate density.** Three different wordings of fact 4 (shipped, v2, v3) all produce
+roughly 4.2–4.3 once the other four facts are rewritten.
+
+### 26.1 The retraction
+
+§24 recorded: *"F4's rewrite is rejected. A 32% drop in estimate density… the fact was
+softened and the behaviour it protects went with it."* And: *"F1, F3, F5 and F6 are
+behaviourally free."*
+
+**Both halves are now unsupported.** Run 1's candidate arm changed five facts at once. The
+drop was credited to F4 because time units are F4's metric — but that reasoning assumed
+each fact only moves its own metric, which is the design assumption §24.4 explicitly
+listed as unverifiable at that n. Run 2 breaks it: holding F4 at its shipped wording and
+rewriting only the other four still gives 4.17.
+
+So whatever moved that metric is **among F1, F3, F5 and F6** — the four already applied to
+`SKILL.md` on the strength of being "behaviourally free" — or it is noise.
+
+### 26.2 Why noise is genuinely live
+
+The whole effect is one case. Within-arm spread on `complex-plan` is as large as the
+between-arm gap: 4 to 22 inside a single arm, against a 16-to-22 range in the arm that
+started this. `debugging-cause`, `multi-step-progress` and `user-caused-error` barely move
+anywhere. At n = 3 on the one high-variance case in the set, [16, 18, 22] against
+[4, 6, 22] is not a result.
+
+The tell worth noting, and not over-reading: the original-facts arm is the only one whose
+three counts are tightly clustered and uniformly high. Every arm containing the four
+rewrites is wide and bimodal. That is a pattern, not evidence.
+
+### 26.3 What settles it, and what not to do meanwhile
+
+**Do not revert the four rewrites on this.** Reverting on ambiguity is the same error as
+shipping on it, and §7 already records what unmeasured reversals cost this document.
+
+The decisive test is narrow and cheap: **`complex-plan` alone, 8 trials per arm, current
+`SKILL.md` against the pre-rewrite six-fact version** — 16 calls, roughly $1.50. One case,
+because it is the only one carrying signal; 8 trials, because 3 demonstrably cannot
+separate these distributions.
+
+Until that runs, the honest status of the four applied rewrites is **"no measured
+behavioural cost, and one unresolved signal that there might be one"** — not the
+"behaviourally free" this document claimed in §24 and the README repeats.
+
+### 26.4 The method failure, named
+
+This is not a metric error. It is worse and more ordinary: **a confounded arm read as
+though it were isolated.** Five variables moved together, one metric shifted, and the
+shift was assigned to the variable whose name matched the metric. §24.4 wrote the caveat
+down correctly and then §24.2 reported the conclusion as though the caveat did not apply.
+
+The rule that follows: *when an arm changes more than one thing, no per-variable claim may
+be made from it, however cleanly the metrics seem to map.* Fact-specific metrics were the
+design's justification for moving five facts in one arm. They were not sufficient, and the
+run that revealed it cost $2.17.

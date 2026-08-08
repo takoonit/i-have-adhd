@@ -64,7 +64,7 @@ Every rule has been **ablated** — deleted one at a time, the same prompts re-r
 
 What has **not** been measured: whether any of it helps a reader. Every number here is a property of generated text, not of a person. A literature sweep found nobody else has measured it either — the two closest trials in adults with ADHD both came back null.
 
-The six facts the rules are built on were graded against clinical research. **Five of six did not survive.** Four have been rewritten to what the evidence supports, and measurably changed nothing about the output — which is its own finding. The fifth is still open: the first attempt at rewriting it cut time-estimate density by a third, so it was reverted and is being retested.
+The six facts the rules are built on were graded against clinical research. **Five of six did not survive.** Four have been rewritten to what the evidence supports; the fifth is unresolved, and so is whether the four cost anything — an arm that moved five facts at once was read as if it isolated one, and the follow-up run retracted that reading. Current status: no measured behavioural cost, one unresolved signal that there may be one.
 
 So: these are writing conventions with demonstrated effects on model output. Anything stronger is unearned, and this project will not claim it.
 

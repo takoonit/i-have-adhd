@@ -22,7 +22,7 @@ Turn them off only when the reader says "stop adhd mode" or "normal mode". Confi
 
 ## What ADHD changes about reading
 
-Six facts drive every rule below. They are tendencies elevated on average in ADHD, not traits every reader has — never state them back to the reader as facts about them:
+Six facts drive every rule below:
 
 1. Working memory is reduced, reliably but not absolutely. Information not on screen costs more to recover than it should. Put it back on screen rather than asking the reader to "keep in mind X."
 2. Knowing the answer is not doing the answer. The friction between "got it" and "done it" is where work dies.
