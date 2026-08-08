@@ -1584,3 +1584,45 @@ run can carry.
   effect around a third of baseline is not formally excluded.
 - **The four rewrites stay applied.** They are correct, and they now have a null measured
   at 8 rather than an assumption made at 3.
+
+## 28. The skill is frozen
+
+Fact 4's accuracy fix is applied, which was the last wording in `SKILL.md` that §22 showed
+to be unsupported. All six facts now state what the evidence supports; the nine rules are
+untouched and have been throughout §22–§27.
+
+```
+4. Duration is hard to judge and harder to hold. Vague estimates fail: "a bit of work"
+   gives the reader nothing to bound the task with. Give a number, even a rough one.
+```
+
+The unsupported half of the old wording was the mechanism — "time estimates feel uniform",
+"register the same" — which §22 found was measured only below a minute and never for
+forecasting real work. "Vague estimates fail" was never a claim about ADHD; it is a
+prohibition about output, and it is kept verbatim.
+
+**Frozen from here.** Nothing in `skills/i-have-adhd/SKILL.md` changes until the reader
+study in `evals/reader-study/protocol.md` has run. The next step is regenerating the 13
+stimulus pairs from this frozen version, per §4.2 of that protocol — the stored pairs
+predate nine ruleset changes and one of them contains fabricated output.
+
+### Follow-ups, recorded and not done
+
+Ranked by how much they would change what this repository claims.
+
+1. **Re-run rules 2 and 6 at n = 8.** Their ablations (numbered lines 8.5 → 4.5; time units
+   8.0 → 2.7) are the size, metric and sample size §27.2 showed n = 3 cannot resolve. Both
+   rules are *kept* either way, so the risk is to the claims, not to the skill. ~$3.
+2. **Ablate the facts block entirely.** If the facts are inert (§27.3), the
+   instruction-budget evidence in §10 says they are cost without return. Removing all six
+   and counting every rule's metric is the test. Bigger than any run so far, and it would
+   decide whether that section exists to steer the model or to persuade a human reading
+   `SKILL.md`.
+3. **Rule 8's cap of three**, unchanged despite §22.3 finding both choice-overload
+   meta-analyses agree option count is not the driver and that expert readers are helped by
+   more options. Deliberately not touched before the reader study, which is the thing that
+   would actually settle whether capping helps.
+4. **Rule 1 and 3's two-minute threshold**, traced to an uncited productivity heuristic
+   answering a different question. Same reasoning as 3.
+5. **F6's anti-softening clause and the scope sentence** (§23.3, §25) — both unfalsifiable
+   on this catalogue, both predicting a decrease in something that occurs zero times.
