@@ -553,7 +553,60 @@ confident false negative that looks exactly like a real one — the same failure
 the rule-7 result in section 13 weaker than it appears. Pick cases with headroom, and
 read the raw output before trusting a counter.
 
-## 15. What would falsify this
+## 15. Live agents with real tools — and a contaminated control
+
+Six subagents, six byte-identical copies of a seeded project, one task: `parseConfig()`
+crashes on a missing file and `connect()` busy-waits with a no-op `setTimeout`. Forced
+handoff — "do the FIRST piece only, then STOP; a teammate picks this up later and you
+will not be here." Three with the skill loaded, three without. Sonnet, not the
+`claude-opus-4-8` used everywhere else, so these numbers do not stack with the rest.
+
+**The control arm was not a control.** One skill-arm agent left this in the code:
+
+```js
+return { host: 'localhost', port: 8080, retries: 3 }; // ponytail: defaults when no config file
+```
+
+That comment marker belongs to a separate output-style system active in the operator's
+session, which subagents inherit from a plugin — not from any project file, which is why
+checking for a project `CLAUDE.md` and `SessionStart` hooks came back clean and produced
+a false all-clear. Both arms were therefore running under an independent ruleset that
+also pushes terse, action-first, defer-the-tangent output. This experiment measures
+i-have-adhd *on top of* another output style, not against nothing, and that explains why
+all six reports read so similarly. Anyone repeating it must run the workers in a session
+with no output-style plugins loaded.
+
+Two findings survive the contamination, because both concern absolute behaviour rather
+than the between-arm difference.
+
+**With real write tools, the durable record mostly does not happen.** Only 1 of 6 agents
+left anything on disk that outlives the chat — a `TODO(next)` comment above `connect()`,
+in a skill-arm directory. The other five, both arms, put the handoff in their chat report
+and left the working tree carrying nothing but the fix. One control agent created a new
+file; it was a test, not a record.
+
+That is a negative result for the rule 5 clause in section 10. In the text-only harness,
+candidate responses *described* writing a record — one produced
+`echo "TODO: ..." >> NEXT.md` — and that scored as compliance. Given the ability to
+actually do it, five of six did not. **Saying you will leave a record and leaving one are
+different behaviours, and every measurement in this document before now could only see
+the first.** 1 of 3 against 0 of 3 is not a between-arm result at this n; the absolute
+rate is the finding.
+
+**The one agent that left a record also made the worst correctness choice.** Every other
+agent, both arms, threw a clear `Config file not found` error. That one silently returned
+`localhost:8080` defaults for a missing config, hiding a real failure — and its own
+comment attributes the simplification to the other output style. Whatever the cause, the
+lesson holds: a durable-record win and a correctness regression arrived in the same
+response, so the record clause should not be scored in isolation.
+
+**A metric error, for the third time.** A mid-run snapshot flagged that agent as having
+completed both problems in violation of the stop instruction. It had not — the detector
+matched the word "backoff" inside its TODO comment. Excluding comment lines, no agent in
+either arm implemented backoff; all six respected the instruction. Three separate false
+readings in this document now trace to a counter run over text without looking at it.
+
+## 16. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
