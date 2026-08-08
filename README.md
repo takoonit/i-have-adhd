@@ -8,16 +8,6 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ayghri/i-have-adhd?style=flat" alt="License"></a>
 </p>
 
-<p align="center">
-  <strong title="English" aria-label="English">🇬🇧</strong> ·
-  <a href=".github/readme/README.zh-CN.md" title="简体中文" aria-label="简体中文">🇨🇳</a> ·
-  <a href=".github/readme/README.pt-BR.md" title="Português (Brasil)" aria-label="Português (Brasil)">🇧🇷</a> ·
-  <a href=".github/readme/README.ja.md" title="日本語" aria-label="日本語">🇯🇵</a> ·
-  <a href=".github/readme/README.vi.md" title="Tiếng Việt" aria-label="Tiếng Việt">🇻🇳</a> ·
-  <a href=".github/readme/README.ko.md" title="한국어" aria-label="한국어">🇰🇷</a>
-</p>
-
-
 ## Install
 
 🔗 [Installation Instructions](INSTALL.md)
@@ -26,9 +16,7 @@
 
 A skill for your coding assistant that stops it from burying the answer. Action first. Steps numbered. No "Hope this helps!"
 
-
 ## What changes
-
 
 <table>
 <tr>
@@ -55,7 +43,6 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 </td>
 </tr>
 </table>
-
 
 ## The rules
 
