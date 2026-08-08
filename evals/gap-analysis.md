@@ -128,11 +128,13 @@ amendments by construction. Keep new criteria condition-neutral.
 4. **Judging is manual.** `run` is automated, `score` aggregates, and the step between
    them is a human writing score rows. Budget the run accordingly.
 
-5. **Translations now lag the English copy.** The condensed ten-rule list appears in
-   `.github/readme/README.{zh-CN,ja,ko,pt-BR,vi}.md` and `.github/install/INSTALL.*.md`.
-   English `README.md` and `INSTALL.md` carry the amendments; the ten translated files
-   do not, and were left alone rather than machine-translated into a repo whose English
-   wording is deliberately tuned. Known drift, not an oversight. `extensions/` and
+5. **Translations.** The condensed rule list appears 7 times in each
+   `.github/install/INSTALL.*.md` and once in each `.github/readme/README.*.md` — 40
+   lists across five languages. These lagged the English copy through sections 2 to 13
+   and were brought up to the current nine rules at the end; each file also carries a
+   rule-count line that had to be corrected separately. The translations are
+   machine-produced from the existing wording in each file and have not been reviewed by
+   a native speaker; they should be before this is offered upstream. `extensions/` and
    `hooks/` were checked and embed no rule text.
 
 6. **Windows: the test suite wrote junk into the repo root.** Fixed in
