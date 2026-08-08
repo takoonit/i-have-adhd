@@ -8,16 +8,6 @@
   <a href="LICENSE"><img src="https://img.shields.io/github/license/ayghri/i-have-adhd?style=flat" alt="License"></a>
 </p>
 
-<p align="center">
-  <strong title="English" aria-label="English">🇬🇧</strong> ·
-  <a href=".github/readme/README.zh-CN.md" title="简体中文" aria-label="简体中文">🇨🇳</a> ·
-  <a href=".github/readme/README.pt-BR.md" title="Português (Brasil)" aria-label="Português (Brasil)">🇧🇷</a> ·
-  <a href=".github/readme/README.ja.md" title="日本語" aria-label="日本語">🇯🇵</a> ·
-  <a href=".github/readme/README.vi.md" title="Tiếng Việt" aria-label="Tiếng Việt">🇻🇳</a> ·
-  <a href=".github/readme/README.ko.md" title="한국어" aria-label="한국어">🇰🇷</a>
-</p>
-
-
 ## Install
 
 🔗 [Installation Instructions](INSTALL.md)
@@ -26,9 +16,7 @@
 
 A skill for your coding assistant that stops it from burying the answer. Action first. Steps numbered. No "Hope this helps!"
 
-
 ## What changes
-
 
 <table>
 <tr>
@@ -56,21 +44,19 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 </tr>
 </table>
 
-
 ## The rules
 
-10 rules. Full text in [SKILL.md](./skills/i-have-adhd/SKILL.md).
+9 rules. Full text in [SKILL.md](./skills/i-have-adhd/SKILL.md).
 
-1. Lead with the next action.
+1. Lead with the next action, startable in under two minutes.
 2. Number multi-step tasks.
 3. End with one concrete next step.
 4. Suppress tangents.
-5. Restate state every turn.
-6. Specific time estimates (minutes, not "a bit").
-7. Make wins visible.
-8. Matter-of-fact errors.
-9. Cap lists at 5 items.
-10. No preamble. No recap. No closers.
+5. Restate state every turn, show what now works, and re-anchor a returning reader.
+6. Specific time estimates, per step (minutes, not "a bit"; never clock times).
+7. Matter-of-fact errors. State, not blame.
+8. Rank lists rather than truncating them; cap choices at 3.
+9. No preamble. No recap. No closers.
 
 ## Tune it
 

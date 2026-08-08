@@ -45,10 +45,36 @@ def load_cases(path: Path = DEFAULT_CASES) -> list[dict[str, Any]]:
     return read_jsonl(path)
 
 
-def completed_keys(rows: list[dict[str, Any]]) -> set[tuple[str, int, str, str]]:
-    keys: set[tuple[str, int, str, str]] = set()
+def resolve_model(command: list[str]) -> str:
+    """The model a runner will actually use, so results can say which one made them."""
+    try:
+        return command[command.index("--model") + 1]
+    except (ValueError, IndexError):
+        # Distinct providers must not share one identity just because neither pins a
+        # model: "unpinned" alone would let a codex row satisfy a claude resume key.
+        return f"unpinned:{command[0]}" if command else "unpinned"
+
+
+def completed_keys(rows: list[dict[str, Any]]) -> set[tuple[str, int, str, str, str]]:
+    """Model is part of the key: the same case under a different model is a different run.
+
+    A row that does not name its model is not evidence that any particular model has
+    answered the case. Inferring one from the current config would silently mis-assign
+    it the moment the pin moves, so such rows are skipped and the case is re-run. Rows
+    cut short by the budget are skipped for the same reason: they are a cost record, not
+    a completed run.
+    """
+    keys: set[tuple[str, int, str, str, str]] = set()
     for row in rows:
-        fields = (row.get("case_id"), row.get("trial"), row.get("condition"), row.get("runner"))
+        if row.get("incomplete") or not row.get("model"):
+            continue
+        fields = (
+            row.get("case_id"),
+            row.get("trial"),
+            row.get("condition"),
+            row.get("runner"),
+            row.get("model"),
+        )
         if isinstance(fields[0], str) and isinstance(fields[1], int) and all(
             isinstance(value, str) for value in fields[2:]
         ):
@@ -56,14 +82,37 @@ def completed_keys(rows: list[dict[str, Any]]) -> set[tuple[str, int, str, str]]
     return keys
 
 
+def case_turns(case: dict[str, Any]) -> list[str]:
+    """A case is either a single `prompt` or an ordered list of `turns`."""
+    turns = case.get("turns")
+    if turns is not None:
+        return list(turns)
+    return [case["prompt"]]
+
+
 def validate_cases(cases: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     seen: set[str] = set()
-    required = {"id", "category", "prompt", "risk", "criteria"}
+    required = {"id", "category", "risk", "criteria"}
     for index, case in enumerate(cases, start=1):
         missing = sorted(required - set(case))
         if missing:
             errors.append(f"Case {index}: missing fields: {', '.join(missing)}")
+            continue
+        has_prompt, has_turns = "prompt" in case, "turns" in case
+        if has_prompt == has_turns:
+            errors.append(f"Case {case['id']}: needs exactly one of prompt or turns")
+            continue
+        if has_turns:
+            turns = case["turns"]
+            if not isinstance(turns, list) or len(turns) < 2:
+                errors.append(f"Case {case['id']}: turns must be a list of 2 or more")
+                continue
+            if not all(isinstance(turn, str) and turn.strip() for turn in turns):
+                errors.append(f"Case {case['id']}: every turn must be a non-empty string")
+                continue
+        if has_prompt and not (isinstance(case["prompt"], str) and case["prompt"].strip()):
+            errors.append(f"Case {case['id']}: prompt must be a non-empty string")
             continue
         case_id = case["id"]
         if not isinstance(case_id, str) or not case_id:
@@ -182,7 +231,40 @@ def _condition_prompt(task: str, condition: str, skill_path: Path | None) -> str
     )
 
 
-def _parse_response(output: str, response_format: str) -> tuple[str, dict[str, Any], float | None]:
+def _replay_prompt(
+    history: list[tuple[str, str]],
+    next_turn: str,
+    condition: str,
+    skill_path: Path | None,
+) -> str:
+    """Multi-turn cases replay the whole exchange each call.
+
+    The runner uses --no-session-persistence, so there is no session to resume.
+    Replaying is also more reproducible: every turn is reconstructed from the
+    recorded text rather than from provider-side state. Turn 1 of a multi-turn
+    case produces the identical string a single-turn case would, so results
+    recorded before multi-turn support stay comparable.
+    """
+    if not history:
+        return _condition_prompt(next_turn, condition, skill_path)
+    exchange = "\n\n".join(
+        f"<user>\n{user}\n</user>\n\n<you>\n{assistant}\n</you>"
+        for user, assistant in history
+    )
+    return _condition_prompt(
+        "This conversation is already in progress. <you> marks your own earlier "
+        "replies.\n\n"
+        f"<conversation>\n{exchange}\n</conversation>\n\n"
+        f"<user>\n{next_turn}\n</user>\n\n"
+        "Reply to that last message.",
+        condition,
+        skill_path,
+    )
+
+
+def _parse_response(output: str | None, response_format: str) -> tuple[str, dict[str, Any], float | None]:
+    if output is None:
+        raise ValueError("Runner produced no readable output on stdout")
     if response_format == "text":
         return output.strip(), {}, None
     if response_format == "claude-json":
@@ -217,6 +299,12 @@ def run_evaluations(args: argparse.Namespace) -> int:
     config = json.loads(args.runner_config.read_text(encoding="utf-8"))
     runner = config[args.runner]
     command = list(runner["command"])
+    if args.model:
+        if "--model" in command:
+            command[command.index("--model") + 1] = args.model
+        else:
+            command += ["--model", args.model]
+    model = resolve_model(command)
     response_format = runner.get("response_format", "text")
     if response_format != "claude-json" and not args.allow_unmetered:
         raise RuntimeError(
@@ -230,6 +318,7 @@ def run_evaluations(args: argparse.Namespace) -> int:
         float(row.get("cost_usd") or 0)
         for row in prior_rows
         if row.get("condition") == args.condition and row.get("runner") == args.runner
+        and row.get("model") == model
     )
 
     if args.budget_usd <= 0 or args.budget_usd > 25:
@@ -241,64 +330,107 @@ def run_evaluations(args: argparse.Namespace) -> int:
             for case in cases:
                 if args.case and case["id"] not in args.case:
                     continue
-                key = (case["id"], trial, args.condition, args.runner)
+                key = (case["id"], trial, args.condition, args.runner, model)
                 if key in done:
                     print(f"skip completed {args.condition} trial {trial}: {case['id']}")
                     continue
-                remaining = args.budget_usd - reported_cost
-                if remaining <= 0:
-                    print("Budget exhausted; stopping.", file=sys.stderr)
-                    return 2
-                prompt = _condition_prompt(case["prompt"], args.condition, args.condition_skill)
-                invocation = [*command]
-                if runner.get("budget_flag"):
-                    invocation.extend([runner["budget_flag"], f"{remaining:.4f}"])
-                invocation.append(prompt)
-                completed = None
-                for attempt in range(args.retries + 1):
-                    completed = subprocess.run(
-                        invocation,
-                        check=False,
-                        capture_output=True,
-                        text=True,
-                        cwd=ROOT,
+                history: list[tuple[str, str]] = []
+                usage: dict[str, Any] = {}
+                case_cost = 0.0
+                for turn_text in case_turns(case):
+                    remaining = args.budget_usd - reported_cost
+                    if remaining <= 0:
+                        # Turns already paid for must be recorded even though the
+                        # conversation is unusable, or the next resume double-spends.
+                        if history:
+                            destination.write(json.dumps({
+                                "case_id": case["id"], "trial": trial,
+                                "condition": args.condition, "runner": args.runner,
+                                "model": model, "response": history[-1][1],
+                                "usage": usage, "cost_usd": case_cost,
+                                "incomplete": True,
+                                "turns_completed": len(history),
+                                "turns_expected": len(case_turns(case)),
+                            }, ensure_ascii=False) + "\n")
+                            destination.flush()
+                        print("Budget exhausted; stopping.", file=sys.stderr)
+                        return 2
+                    prompt = _replay_prompt(
+                        history, turn_text, args.condition, args.condition_skill
                     )
-                    if completed.returncode == 0:
-                        break
-                    if attempt < args.retries:
-                        time.sleep(min(2**attempt, 5))
-                assert completed is not None
-                if completed.returncode:
-                    detail = completed.stderr.strip() or completed.stdout.strip()
-                    if completed.stdout.strip():
-                        try:
-                            parsed_text, _, _ = _parse_response(completed.stdout, response_format)
-                            detail = parsed_text or detail
-                        except (ValueError, json.JSONDecodeError):
-                            pass
-                    raise RuntimeError(
-                        f"Runner failed after {args.retries + 1} attempts "
-                        f"({shlex.join(invocation[:-1])}):\n{detail}"
+                    invocation = [*command]
+                    if runner.get("budget_flag"):
+                        invocation.extend([runner["budget_flag"], f"{remaining:.4f}"])
+                    invocation.append(prompt)
+                    completed = None
+                    for attempt in range(args.retries + 1):
+                        completed = subprocess.run(
+                            invocation,
+                            check=False,
+                            capture_output=True,
+                            text=True,
+                            # Without an explicit codec this decodes as the locale
+                            # encoding, which on Windows is cp1252 and cannot represent
+                            # what the models return. The decode raises in subprocess's
+                            # reader thread and stdout comes back as None.
+                            encoding="utf-8",
+                            errors="replace",
+                            cwd=ROOT,
+                        )
+                        if completed.returncode == 0:
+                            break
+                        if attempt < args.retries:
+                            time.sleep(min(2**attempt, 5))
+                    assert completed is not None
+                    if completed.returncode:
+                        detail = completed.stderr.strip() or completed.stdout.strip()
+                        if completed.stdout.strip():
+                            try:
+                                parsed_text, _, _ = _parse_response(
+                                    completed.stdout, response_format
+                                )
+                                detail = parsed_text or detail
+                            except (ValueError, json.JSONDecodeError):
+                                pass
+                        raise RuntimeError(
+                            f"Runner failed after {args.retries + 1} attempts "
+                            f"({shlex.join(invocation[:-1])}):\n{detail}"
+                        )
+                    turn_text_out, usage, turn_cost = _parse_response(
+                        completed.stdout, response_format
                     )
-                text, usage, cost = _parse_response(completed.stdout, response_format)
-                if cost is None and not args.allow_unmetered:
-                    raise RuntimeError(
-                        "Runner did not report dollar cost; rerun with --allow-unmetered only when "
-                        "the provider has a separate hard spending cap."
-                    )
-                reported_cost += float(cost or 0)
+                    if turn_cost is None and not args.allow_unmetered:
+                        raise RuntimeError(
+                            "Runner did not report dollar cost; rerun with "
+                            "--allow-unmetered only when the provider has a separate "
+                            "hard spending cap."
+                        )
+                    # A partly-run conversation is not a usable row: charge the turns
+                    # that completed, then let the next turn's budget check stop it.
+                    reported_cost += float(turn_cost or 0)
+                    case_cost += float(turn_cost or 0)
+                    history.append((turn_text, turn_text_out))
                 row = {
                     "case_id": case["id"],
                     "trial": trial,
                     "condition": args.condition,
                     "runner": args.runner,
-                    "response": text,
+                    "model": model,
+                    # `response` stays the last reply so single-turn consumers and
+                    # every previously recorded row keep the same shape.
+                    "response": history[-1][1],
                     "usage": usage,
-                    "cost_usd": cost,
+                    "cost_usd": case_cost,
                 }
+                if len(history) > 1:
+                    row["transcript"] = [
+                        {"user": user, "assistant": assistant}
+                        for user, assistant in history
+                    ]
                 destination.write(json.dumps(row, ensure_ascii=False) + "\n")
                 destination.flush()
-                print(f"{args.condition} trial {trial}: {case['id']}")
+                turns_note = f" ({len(history)} turns)" if len(history) > 1 else ""
+                print(f"{args.condition} trial {trial}: {case['id']}{turns_note}")
     print(f"Reported cost: ${reported_cost:.4f}")
     return 0
 
@@ -322,6 +454,11 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--cases", type=Path, default=DEFAULT_CASES)
     run.add_argument("--runner-config", type=Path, default=ROOT / "evals" / "runners.example.json")
     run.add_argument("--runner", required=True)
+    run.add_argument(
+        "--model",
+        help="Override the runner's pinned model. Findings are model-scoped: sweep the "
+             "models you ship to rather than trusting one pin.",
+    )
     run.add_argument("--condition", choices=sorted(CONDITIONS), required=True)
     run.add_argument("--condition-skill", type=Path)
     run.add_argument("--case", action="append")

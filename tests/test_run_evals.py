@@ -21,6 +21,41 @@ class EvaluationHarnessTest(unittest.TestCase):
         self.assertGreaterEqual(len(cases), 12)
         self.assertGreaterEqual(len({case["category"] for case in cases}), 8)
 
+    def test_multi_turn_cases_are_validated_and_expanded(self):
+        base = {"id": "c", "category": "continuity", "risk": "low", "criteria": ["x"]}
+
+        self.assertEqual([], run_evals.validate_cases([{**base, "turns": ["a", "b"]}]))
+        self.assertEqual(["a", "b"], run_evals.case_turns({**base, "turns": ["a", "b"]}))
+        self.assertEqual(["a"], run_evals.case_turns({**base, "prompt": "a"}))
+
+        for bad, expected in (
+            ({}, "exactly one of prompt or turns"),
+            ({"prompt": "a", "turns": ["a", "b"]}, "exactly one of prompt or turns"),
+            ({"turns": ["a"]}, "list of 2 or more"),
+            ({"turns": ["a", "  "]}, "non-empty string"),
+        ):
+            with self.subTest(bad=bad):
+                errors = run_evals.validate_cases([{**base, **bad}])
+                self.assertTrue(
+                    any(expected in error for error in errors), errors
+                )
+
+    def test_replay_prompt_leaves_the_first_turn_byte_identical(self):
+        """Rows recorded before multi-turn support must stay comparable."""
+        skill = ROOT / "skills" / "i-have-adhd" / "SKILL.md"
+        for condition, path in (("baseline", None), ("candidate", skill)):
+            with self.subTest(condition=condition):
+                self.assertEqual(
+                    run_evals._condition_prompt("ask", condition, path),
+                    run_evals._replay_prompt([], "ask", condition, path),
+                )
+
+        later = run_evals._replay_prompt([("q1", "a1")], "q2", "baseline", None)
+        self.assertIn("<user>\nq1\n</user>", later)
+        self.assertIn("<you>\na1\n</you>", later)
+        self.assertIn("<user>\nq2\n</user>", later)
+        self.assertLess(later.index("q1"), later.index("q2"))
+
     def test_score_summary_applies_weights_and_release_gates(self):
         scores = []
         for condition, value in (("baseline", 3), ("candidate", 4)):
@@ -130,7 +165,10 @@ class EvaluationHarnessTest(unittest.TestCase):
                 json.dumps(
                     {
                         "stub": {
-                            "command": ["sh", "-c", f"touch {marker} && echo hi"],
+                            # as_posix(): sh eats the backslashes in a Windows path,
+                            # so `touch` would create a junk file in the runner's cwd
+                            # (the repo root) instead of the temp dir.
+                            "command": ["sh", "-c", f"touch '{marker.as_posix()}' && echo hi"],
                             "response_format": "text",
                         }
                     }
@@ -147,6 +185,7 @@ class EvaluationHarnessTest(unittest.TestCase):
                 retries=0,
                 budget_usd=1.0,
                 allow_unmetered=False,
+                model=None,
                 output=tmp_path / "out.jsonl",
             )
 
@@ -161,19 +200,55 @@ class EvaluationHarnessTest(unittest.TestCase):
             self.assertTrue(marker.exists())
 
     def test_completed_keys_support_resuming_partial_runs(self):
-        rows = [
-            {
-                "case_id": "direct-answer",
-                "trial": 1,
-                "condition": "baseline",
-                "runner": "claude",
-            }
-        ]
+        row = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+               "runner": "claude", "model": "m1"}
 
         self.assertEqual(
-            {("direct-answer", 1, "baseline", "claude")},
-            run_evals.completed_keys(rows),
+            {("direct-answer", 1, "baseline", "claude", "m1")},
+            run_evals.completed_keys([row]),
         )
+
+    def test_resume_does_not_reuse_rows_from_another_model(self):
+        """A case answered by a different model is a different run, not a completed one."""
+        row = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+               "runner": "claude", "model": "m1"}
+        done = run_evals.completed_keys([row])
+
+        self.assertNotIn(("direct-answer", 1, "baseline", "claude", "m2"), done)
+
+    def test_rows_without_a_model_are_not_credited_to_any_model(self):
+        """Inferring a model would mis-assign the row the moment the pin moves."""
+        legacy = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
+                  "runner": "claude"}
+
+        self.assertEqual(set(), run_evals.completed_keys([legacy]))
+
+    def test_resolve_model_reads_the_pin_from_the_command(self):
+        self.assertEqual("x", run_evals.resolve_model(["claude", "--model", "x", "p"]))
+        self.assertEqual("unpinned:claude", run_evals.resolve_model(["claude", "--print"]))
+        self.assertEqual("unpinned:claude", run_evals.resolve_model(["claude", "--model"]))
+
+    def test_unpinned_runners_do_not_share_one_identity(self):
+        """Two providers that both omit --model are not the same model."""
+        self.assertNotEqual(
+            run_evals.resolve_model(["codex", "exec"]),
+            run_evals.resolve_model(["claude", "--print"]),
+        )
+
+    def test_incomplete_rows_never_satisfy_a_resume_key(self):
+        """A conversation cut off by the budget must be re-run, not counted as done."""
+        row = {"case_id": "c", "trial": 1, "condition": "baseline", "runner": "r",
+               "model": "m", "incomplete": True}
+
+        self.assertEqual(set(), run_evals.completed_keys([row]))
+
+    def test_null_or_blank_prompt_is_rejected(self):
+        """A null prompt used to reach subprocess.run as None."""
+        base = {"id": "c", "category": "x", "risk": "low", "criteria": ["y"]}
+        for bad in (None, "", "   "):
+            with self.subTest(prompt=bad):
+                errors = run_evals.validate_cases([{**base, "prompt": bad}])
+                self.assertTrue(any("non-empty string" in e for e in errors), errors)
 
 
 if __name__ == "__main__":
