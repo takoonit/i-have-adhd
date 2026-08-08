@@ -508,7 +508,52 @@ job. The ruleset is 9 rules. No behaviour was dropped; one instruction slot was 
 which is the thing the ETH evidence says actually buys compliance for the rules that
 remain. Justified by the structural overlap visible in the text, not by n = 3.
 
-## 14. What would falsify this
+## 14. Leave-one-out on rules 1, 4 and 9
+
+`tempting-tangent` was rewritten first. The old version asked for a fix to a login
+endpoint this repository does not contain, so every response spent its turn hunting for
+absent code; the six rows recorded against it in section 6 measured nothing. It is now
+self-contained, with the defect visible inline (`req.body.email.toLowerCase()` on a
+missing field) and the two tangents still planted.
+
+Four arms, 4 cases, 3 trials, 48 calls, $3.45. Deleting a rule was not sufficient on its
+own: the pre-send checklist restates several rules, so each ablated arm also had the
+matching checklist item removed — item 3 for rule 4, items 1 and 2 for rule 9 — and the
+frontmatter phrase stripped for rule 1. Without that, `no9` would still have been told to
+strip preamble by the checklist and the arm would have measured nothing.
+
+| rule | metric | control | ablated |
+| --- | --- | --- | --- |
+| 1. Lead with the action | `error-report` first line carries the fact or the fix | 3 of 3 | **0 of 3** |
+| 9. No preamble or closers | `casual-message` ends with an offer of further help | 0 of 3 | **3 of 3** |
+| 4. Suppress tangents | where the tangent sits, and how much room it gets | 85–89%, 83 chars | 85–91%, 90 chars |
+
+**Rules 1 and 9 survive.** Without rule 1 the replies open with "Before reporting, let me
+confirm the actual state at `build.ts:88`", a bare `## What's failing` heading, and a code
+fence; with it, all three open with the missing file or the fix. Without rule 9 every
+reply to "Thanks, that solved it" grows a closer — mean length 24 characters becomes 80,
+and the added text is entirely the closer.
+
+**Rule 4 shows no effect and is being kept anyway.** The tangent lands in the last 15% of
+the reply and gets the same 80-odd characters with or without the rule. But this is not
+rule 7's situation and should not get rule 7's treatment. Rule 7 was removable because
+another rule was visibly doing its job; nothing else in the ruleset covers tangent
+suppression, so deleting it would remove guidance rather than deduplicate it. The case
+also tests only one facet — a tangent the *reader* flagged — and says nothing about
+rule 4's second paragraph, which is about the agent resolving its own mid-work questions
+instead of surfacing them. Recorded as unsupported at n = 3 on one facet, not as noise.
+
+**A caution about the method itself.** The first pass over this data reported a flat null
+on all three rules across all four arms. That was entirely metric error: the preamble
+regex looked for canned openers and missed closers phrased as "Ping me when the next
+thing comes up", and the action-first check counted a bare code fence as an action.
+`direct-answer` and `casual-message` were also near-floor for rule 9, leaving almost no
+headroom. An ablation with a badly chosen metric or a saturated case produces a
+confident false negative that looks exactly like a real one — the same failure that makes
+the rule-7 result in section 13 weaker than it appears. Pick cases with headroom, and
+read the raw output before trusting a counter.
+
+## 15. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
