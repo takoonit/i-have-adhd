@@ -1509,3 +1509,78 @@ The rule that follows: *when an arm changes more than one thing, no per-variable
 be made from it, however cleanly the metrics seem to map.* Fact-specific metrics were the
 design's justification for moving five facts in one arm. They were not sufficient, and the
 run that revealed it cost $2.17.
+
+## 27. The facts do not move this behaviour at all. Both prior conclusions were noise.
+
+16 calls, $1.81, `complex-plan` only, 8 trials per arm — the current skill (four facts
+rewritten) against the pre-rewrite six-fact version, byte-identical apart from those four
+lines, same line endings.
+
+| Arm | counts | mean | sd |
+| --- | --- | --: | --: |
+| current, four rewritten | 8, 9, 12, 13, 14, 16, 16, 17 | **13.12** | 3.31 |
+| original six facts | 5, 8, 10, 11, 11, 18, 18, 22 | **12.88** | 5.82 |
+
+Difference **−0.25 time units per reply**, d = −0.05, permutation p = 0.958 over 200,000
+shuffles. 95% CI [−5.33, +4.83].
+
+### 27.1 What this retracts
+
+Everything either of the last two sections claimed about fact wording and estimates.
+
+- **§24: "F4's rewrite is rejected — a 32% drop."** Wrong. Retracted in §26 for the wrong
+  reason, and now wrong on its own terms too: no fact wording moves this metric.
+- **§26: "the mover is among F1/F3/F5/F6."** Also wrong. There is no mover.
+
+The pilot effect of −8.0 units is **outside the confidence interval** and is excluded. The
+headline "−32%" (about −4.2 units) sits just inside it and is not formally excluded, which
+is the honest limit of 8 per arm — but the point estimate is −0.25, in the opposite
+direction to both retracted claims.
+
+### 27.2 The n = 3 problem, demonstrated rather than asserted
+
+The same condition, run twice:
+
+| Condition | n = 3 sample | n = 8 sample |
+| --- | --- | --- |
+| original six facts | 16, 18, 22 → **18.67** | 5, 8, 10, 11, 11, 18, 18, 22 → **12.88** |
+| four rewritten | 4, 6, 22 → **10.67** | 8, 9, 12, 13, 14, 16, 16, 17 → **13.12** |
+
+Both n = 3 samples were unrepresentative draws from the same wide distribution, in opposite
+directions, and the 8-unit "effect" between them was the gap between two accidents. The
+underlying distribution on `complex-plan` runs 5 to 22 regardless of condition.
+
+Every ablation in §13–§20 ran at n = 3. The large ones — rule 3's 8/9 → 1/9, rule 1's
+3/3 → 0/3, rule 9's 0/3 → 3/3 — are near-total behavioural switches and are unlikely to be
+this artifact. **The moderate ones are now in doubt**, specifically rule 2 (numbered lines
+8.5 → 4.5) and rule 6 (time units 8.0 → 2.7), because those are exactly the size and the
+metric this section just showed n = 3 cannot resolve. Neither has been re-run at n = 8.
+
+### 27.3 What it means for the skill
+
+**The rules carry the behaviour; the facts are inert.** §20 measured that ablating rule 6
+*together with* fact 4 cut time units 8.0 → 2.7. Rewriting fact 4 alone, three different
+ways, changes nothing. Consistent reading: the instruction does the work and the
+justification beside it does not.
+
+Consequence, and it simplifies the pending decision entirely: **all six facts can be
+corrected for accuracy at no behavioural cost.** F4 was the only one held back, on a
+finding that has now evaporated. There is no longer a measured reason to keep any wording
+that §22 showed to be false.
+
+It also sharpens a question this document has not asked: if the facts are inert, the
+instruction-budget evidence in §10 says they are a cost with no return, and the section
+should be justified as motivation for a human reader of `SKILL.md` rather than as
+something that steers the model. Not acted on. It would need its own ablation — the whole
+block removed, all nine rules' metrics counted — and that is a bigger question than this
+run can carry.
+
+### 27.4 Limits
+
+- **One case, one metric, one model.** `complex-plan` is where the signal was; nothing here
+  says the facts are inert on metrics other than estimate density.
+- **8 per arm gives 53% power for d = 1.1.** A marginal null would have been uninformative.
+  This is not marginal — d = −0.05, p = 0.96 — but the CI still spans ±5 units, so a real
+  effect around a third of baseline is not formally excluded.
+- **The four rewrites stay applied.** They are correct, and they now have a null measured
+  at 8 rather than an assumption made at 3.
