@@ -25,12 +25,12 @@ so redundancy must be shown on the most verbose model in scope, not the leanest 
 | # | Rule | Changed? | Evidence |
 | --- | --- | --- | --- |
 | 1 | Lead with the next action | amended | **Ablated**: 3/3 → 0/3 |
-| 2 | Number multi-step tasks | unchanged | Strongest external support; ablation in progress |
+| 2 | Number multi-step tasks | unchanged | **Ablated**: numbered lines 8.5 → 4.5 per reply |
 | 3 | End with one concrete next action | unchanged | **Ablated**: 8/9 → 1/9 (Opus 4.8); no effect on Haiku |
 | 4 | Suppress tangents | unchanged | **Ablated**: no effect; kept, see below |
 | 5 | Restate state every turn | amended then narrowed | **Measured**; strongest evidence discarded as out of scope |
-| 6 | Give specific time estimates | amended | **Measured**: 2.28 → 4.92; ablation in progress |
-| 7 | Matter-of-fact tone for errors | amended | **Measured**: 2.68 → 5.00; ablation in progress |
+| 6 | Give specific time estimates | amended | **Ablated**: time units 8.0 → 2.7 per reply |
+| 7 | Matter-of-fact tone for errors | amended | **Ablated**: blame 0/3 → 2/3; drama clause inert |
 | 8 | Rank what you list; cap choices at 3 | rewritten | **Ablated**: cap vs rank |
 | 9 | No preamble, recap or closers | unchanged | **Ablated**: 0/3 → 3/3 closers (Opus 4.8); no effect on Haiku |
 | — | ~~Make completed work visible~~ | **merged into 5** | **Ablated** and **cross-model verified** |
@@ -80,6 +80,10 @@ the reply itself, without making the gap a subject.
   collapse ends the whole attempt. The old rule was silent on both, and its own example
   ("an afternoon if not") sat at the vague end it prohibits.
 - **Measured:** `time-estimate` 2.28 → 4.92 weighted.
+- **Ablated:** removing rule 6 barely changes whether an estimate appears (5 of 6 → 4 of 6)
+  but cuts time units per reply from 8.0 to 2.7. Both arms give *an* estimate; only the
+  control gives one per step — which is precisely the clause added here, and the clearest
+  evidence any amendment in this list has produced for itself.
 
 ### Rule 7 — neutrality covers the reader, not just the error
 
@@ -92,6 +96,11 @@ softening, which reads as condescending.
 - **Caveat:** "rejection sensitive dysphoria" is **not** in DSM-5 and has no standardised
   criteria. This rule rests on emotional dysregulation, which is validated.
 - **Measured:** `user-caused-error` 2.68 → 5.00 weighted.
+- **Ablated, and it splits.** The blame clause earns its place: without it the model wrote
+  "You skipped the same step twice" and "You skipped it, so the first query hit a column
+  that isn't there", 2 of 3 against 0 of 3 for the control. The older drama clause ("Uh
+  oh", "Oh no") is inert on this model — zero occurrences in either arm — and is kept
+  anyway, since inertness on a verbose model is not grounds to delete.
 
 ### Rule 8 — ranks lists instead of capping them
 
@@ -245,7 +254,9 @@ Standing rule: print samples before believing a count, especially a count that s
 
 ## 7. Still unmeasured
 
-- Rules 2, 6 and 7 — leave-one-out in progress at the time of writing.
+- Leave-one-out is complete for all nine rules. Two show no measurable effect — rule 4,
+  and rule 7's drama clause — and both are kept, since neither has been shown redundant on
+  a model more verbose than the one tested.
 - Rule 4's null stands at n = 3 on one facet.
 - Every ablation except the rule 7 merge is single-model.
 - `rubric.md` still has no dimension for the skill's own distinctives; state continuity,

@@ -771,7 +771,62 @@ Pending a scope decision by the maintainer: either the clause narrows to respons
 (restate state; say what now works and how to see it), or the skill's stated purpose
 widens to cover what the agent leaves behind. Not changed unilaterally.
 
-## 20. What would falsify this
+## 20. Rules 2, 6 and 7 — the last three, and leave-one-out is complete
+
+33 calls, $2.80, `claude-opus-4-8`. Each arm also lost the *fact* that restates its rule
+— fact 4 for rule 6 ("Time estimates feel uniform… Vague estimates fail"), fact 6 for
+rule 7 ("Neutral text is read as criticism… blame and false cheer are both wrong") — and
+the matching phrase in the frontmatter description. Without that the arms carry the
+principle in their preamble and measure nothing.
+
+| rule | metric | control | ablated |
+| --- | --- | --- | --- |
+| 2. Number multi-step tasks | numbered lines per reply | 8.5 | **4.5** |
+| 2. | replies containing a numbered list | 5 of 6 | **3 of 6** |
+| 6. Give specific time estimates | time units per reply | 8.0 | **2.7** |
+| 6. | replies containing any estimate | 5 of 6 | 4 of 6 |
+| 7. Matter-of-fact errors | blame attributions, `user-caused-error` | **0 of 3** | **2 of 3** |
+| 7. | drama openers ("uh oh") | 0 of 6 | 0 of 6 |
+
+**Rule 2 survives.** Removing it roughly halves numbered structure. Not the collapse rule
+3 showed, but a clear effect, and it is the rule with the strongest external support in
+the set (NN/g measured +47% usability for prose reformatted as scannable bullets, +124%
+with conciseness; the W3C Cognitive Accessibility working group prescribes numbered lists
+for ADHD readers by name).
+
+**Rule 6 survives, and the surviving part is the amendment.** Presence barely moves — 5 of
+6 to 4 of 6, which is noise — but density drops threefold. Both arms give *an* estimate;
+only the control gives one per step. That is exactly the clause added in §2 ("put the
+estimate on each step, not only on the job as a whole"), and it is the clearest evidence
+any of this document's amendments has produced for itself.
+
+**Rule 7 splits.** The blame clause earns its place: on `user-caused-error`, the case that
+exercises it, the ablated arm produced "You skipped the same step twice." and "You skipped
+it, so the first query hit a column that isn't there", against nothing comparable in the
+control. `error-report` is 0 of 3 in both arms, as expected — a missing config file has
+nobody to blame. The drama clause ("Uh oh", "Oh no") is inert on this model: zero
+occurrences in either arm. It is upstream's wording, not an amendment, and by the Haiku
+rule in §18 it stays — inertness on a verbose model is not grounds to delete, and a
+leaner or older model may well produce the drama this bans.
+
+**A metric near-miss, caught this time.** The automated counter reported blame at 1 of 6
+for the control. Reading the hit showed a false positive — "Paste the step you skipped
+and I'll give you the exact command" is a neutral reference, not an attribution. Corrected
+to 0 of 6 before publishing rather than after. Sixth encounter with the same failure mode,
+first one caught by the standing rule from §18 rather than by a later contradiction.
+
+**Coverage.** All nine rules have now been through leave-one-out:
+
+| survives | no measurable effect |
+| --- | --- |
+| 1 (3/3 → 0/3), 2, 3 (8/9 → 1/9), 6, 7-blame, 8, 9 (0/3 → 3/3) | 4, 7-drama |
+
+Both nulls are kept, for the reason in §18: a rule earns its place if any supported model
+needs it, and neither has been shown redundant on a model more verbose than this one.
+Everything in the table is `claude-opus-4-8` except the rule 7 merge, which was checked on
+three models, and rules 3 and 9, which were re-run on Haiku and showed no effect there.
+
+## 21. What would falsify this
 
 The five amendments are unmeasured. The rubric's own gate — no blocking findings,
 correctness and safety within 0.1 of baseline, weighted score above baseline — is the
