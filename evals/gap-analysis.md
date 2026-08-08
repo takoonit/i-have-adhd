@@ -835,15 +835,26 @@ three models, and rules 3 and 9, which were re-run on Haiku and showed no effect
 
 ## 21. What would falsify this
 
-The five amendments are unmeasured. The rubric's own gate — no blocking findings,
-correctness and safety within 0.1 of baseline, weighted score above baseline — is the
-test. The specific risks:
+Current as of §20, nine rules and 24 cases. The pre-measurement version of this section,
+written when five amendments were unmeasured and the catalogue held 20 cases, is
+superseded — see the header.
 
-- The scope-line allowance is the most likely to backfire, by reopening the door to
-  preamble that rule 10 exists to close.
-- Per-step estimates add tokens to every numbered list and may cost concision without
-  buying actionability.
-- The choice cap of 3 may cost correctness on cases where the fourth option is the
-  right one; `choice-overload` and `list-overflow` are the cases to watch.
+What would overturn what is recorded above:
 
-Run baseline against candidate on all 20 cases before treating any of this as settled.
+- **Any ablation repeated on a more verbose model than `claude-opus-4-8` showing a
+  different result.** Every leave-one-out here except the rule 7 merge is single-model,
+  and §18 established that a rule's value scales with how much the base model
+  over-explains. A model that buries answers more than Opus 4.8 could make rule 4 or the
+  drama clause non-null; one that buries less could shrink rules 3 and 9 to nothing, as
+  Haiku already did.
+- **A non-Claude runner disagreeing.** Every number came from Claude runners. The Gemini
+  and OpenAI adapters ship unmeasured, and a vendor whose defaults differ could invert
+  any of these.
+- **A judge who is not this project's author or its Sonnet judge.** Two judges agreed at
+  r = 0.90, and both were run by the same person with the same rubric.
+- **`rubric.md` gaining a dimension for what the skill actually claims.** State
+  continuity, visible wins and absence of preamble reach the score only through
+  actionability at 20%, so a candidate could regress on the skill's own distinctives and
+  still clear the gate.
+- **Rule 4 and the drama clause at larger n.** Both nulls rest on n = 3 on a single facet
+  and are kept on principle rather than on evidence.

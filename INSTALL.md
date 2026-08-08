@@ -49,7 +49,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 
 </details>
@@ -202,7 +202,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 
 </details>
@@ -323,7 +323,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 
 </details>
@@ -387,7 +387,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 
 </details>
@@ -527,7 +527,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 
 </details>
@@ -596,7 +596,7 @@ The reader has ADHD. Shape every response so it can be acted on:
 8. Rank every list; cap choices at 3.
 9. No preamble, no recaps, no closers.
 
-Exceptions: explain fully when asked to explain. Confirm before destructive actions. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
+Exceptions: explain fully when asked to explain. Before a destructive action, run the read-only preview yourself, show its actual output, and confirm only before the destructive step — never present a preview you have not run. After three failed fixes, stop and name the doubtful assumption. If the request is ambiguous, ask one short question.
 ```
 </details>
 

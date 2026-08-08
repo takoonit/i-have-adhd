@@ -55,25 +55,25 @@ def resolve_model(command: list[str]) -> str:
         return f"unpinned:{command[0]}" if command else "unpinned"
 
 
-def completed_keys(
-    rows: list[dict[str, Any]], default_model: str = "unpinned"
-) -> set[tuple[str, int, str, str, str]]:
+def completed_keys(rows: list[dict[str, Any]]) -> set[tuple[str, int, str, str, str]]:
     """Model is part of the key: the same case under a different model is a different run.
 
-    Rows written before results carried a `model` field are backfilled with the model
-    currently configured, which is what produced them in any file where the pin has not
-    moved — the only way such a file can exist.
+    A row that does not name its model is not evidence that any particular model has
+    answered the case. Inferring one from the current config would silently mis-assign
+    it the moment the pin moves, so such rows are skipped and the case is re-run. Rows
+    cut short by the budget are skipped for the same reason: they are a cost record, not
+    a completed run.
     """
     keys: set[tuple[str, int, str, str, str]] = set()
     for row in rows:
-        if row.get("incomplete"):
+        if row.get("incomplete") or not row.get("model"):
             continue
         fields = (
             row.get("case_id"),
             row.get("trial"),
             row.get("condition"),
             row.get("runner"),
-            row.get("model", default_model),
+            row.get("model"),
         )
         if isinstance(fields[0], str) and isinstance(fields[1], int) and all(
             isinstance(value, str) for value in fields[2:]
@@ -313,12 +313,12 @@ def run_evaluations(args: argparse.Namespace) -> int:
         )
     reported_cost = 0.0
     prior_rows = read_jsonl(args.output) if args.output.exists() else []
-    done = completed_keys(prior_rows, model)
+    done = completed_keys(prior_rows)
     reported_cost = sum(
         float(row.get("cost_usd") or 0)
         for row in prior_rows
         if row.get("condition") == args.condition and row.get("runner") == args.runner
-        and row.get("model", model) == model
+        and row.get("model") == model
     )
 
     if args.budget_usd <= 0 or args.budget_usd > 25:

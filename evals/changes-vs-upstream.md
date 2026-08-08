@@ -1,8 +1,16 @@
 # Changes against upstream
 
-Base: `ayghri/i-have-adhd` at `2d19ad2`, which this fork matched exactly at the start
-(verified by `git ls-remote`). Reasoning and full results live in `gap-analysis.md`;
-this file is the change list.
+Base: `ayghri/i-have-adhd` at `2d19ad2`. This fork's `main` was at the same commit when
+the work started, so the fork point and the upstream reference are one object.
+Reproduce:
+
+```bash
+git ls-remote https://github.com/ayghri/i-have-adhd.git main   # -> 2d19ad2…
+git merge-base --is-ancestor 2d19ad2 HEAD && echo "2d19ad2 is the fork point"
+git diff --stat 2d19ad2...HEAD                                  # every change below
+```
+
+Reasoning and full results live in `gap-analysis.md`; this file is the change list.
 
 **Scope of the skill**, recorded because it governs what counts as an in-scope change:
 loosely based on *The Adult ADHD Tool Kit* (Ramsay & Rostain), adapted for **how an LLM

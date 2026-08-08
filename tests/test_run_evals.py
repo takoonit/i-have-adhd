@@ -205,26 +205,23 @@ class EvaluationHarnessTest(unittest.TestCase):
 
         self.assertEqual(
             {("direct-answer", 1, "baseline", "claude", "m1")},
-            run_evals.completed_keys([row], "m1"),
+            run_evals.completed_keys([row]),
         )
 
     def test_resume_does_not_reuse_rows_from_another_model(self):
         """A case answered by a different model is a different run, not a completed one."""
         row = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
                "runner": "claude", "model": "m1"}
-        done = run_evals.completed_keys([row], "m2")
+        done = run_evals.completed_keys([row])
 
         self.assertNotIn(("direct-answer", 1, "baseline", "claude", "m2"), done)
 
-    def test_legacy_rows_without_a_model_are_backfilled(self):
-        """Files written before results carried a model came from the configured pin."""
+    def test_rows_without_a_model_are_not_credited_to_any_model(self):
+        """Inferring a model would mis-assign the row the moment the pin moves."""
         legacy = {"case_id": "direct-answer", "trial": 1, "condition": "baseline",
                   "runner": "claude"}
 
-        self.assertIn(
-            ("direct-answer", 1, "baseline", "claude", "pinned"),
-            run_evals.completed_keys([legacy], "pinned"),
-        )
+        self.assertEqual(set(), run_evals.completed_keys([legacy]))
 
     def test_resolve_model_reads_the_pin_from_the_command(self):
         self.assertEqual("x", run_evals.resolve_model(["claude", "--model", "x", "p"]))
@@ -243,7 +240,7 @@ class EvaluationHarnessTest(unittest.TestCase):
         row = {"case_id": "c", "trial": 1, "condition": "baseline", "runner": "r",
                "model": "m", "incomplete": True}
 
-        self.assertEqual(set(), run_evals.completed_keys([row], "m"))
+        self.assertEqual(set(), run_evals.completed_keys([row]))
 
     def test_null_or_blank_prompt_is_rejected(self):
         """A null prompt used to reach subprocess.run as None."""
