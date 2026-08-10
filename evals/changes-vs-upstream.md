@@ -116,8 +116,12 @@ Was "Cap lists at 5 items". Now: rank every list, never drop a correct item to h
 length, cap only what the reader must *choose* between, at three.
 
 - **Why the cap was wrong:** Miller's 7±2 governs *recall*; a list on screen is
-  *recognition*. Cockburn, Gutwin & Greenberg's menu model and Hawkins et al. find Hick's
-  Law log-linear to 20 visible alternatives. Misapplied cognitive science.
+  *recognition*. Misapplied cognitive science. **Corrected in §22:** the original wording
+  here claimed Hick's Law is "log-linear to 20 visible alternatives", which overstates its
+  source — the investigated range is 2–10, results beyond 10 are mixed, and for a reader
+  meeting a list for the first time visual search is *linear* in length, not logarithmic.
+  The conclusion is unchanged; the reason for it is that an unranked list makes the reader
+  do the ranking, which §12's ablation measured directly.
 - **Why the choice cap survives:** choosing is not reading. Decision time grows with
   alternatives, and the ADHD sources add decision paralysis.
 - **Ablated:** `list-overflow` went from 5, 5, 9 items to 9, 9, 7, all ranked worst-first.

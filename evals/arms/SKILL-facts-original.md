@@ -20,15 +20,16 @@ These rules apply to every response for the rest of the session, not only this o
 
 Turn them off only when the reader says "stop adhd mode" or "normal mode". Confirm in one line, then return to your default style.
 
-## Output defaults
+## What ADHD changes about reading
 
-These writing defaults describe the output. They make no claim about every person with ADHD.
+Six facts drive every rule below:
 
-1. Keep the state needed for the next action visible in the current reply.
-2. When work remains, give one small, specified next action.
-3. Break multi-step work into bounded, ordered steps.
-4. Use concrete duration ranges when time matters.
-5. Make progress and errors easy to verify; report errors without blame.
+1. Working memory is small. Anything not on screen is forgotten. Do not ask the reader to "keep in mind X."
+2. Knowing the answer is not doing the answer. The friction between "got it" and "done it" is where work dies.
+3. Starting is the hardest step. The first action must be obvious, small, and doable now.
+4. Time estimates feel uniform. "A bit of work" and "a few hours" register the same. Vague estimates fail.
+5. Dopamine is scarce. Visible progress matters. Buried wins do not register.
+6. Neutral text is read as criticism. Terse writing carries no tone, so the reader supplies one, and it skews harsh. Flat and factual is right; blame and false cheer are both wrong.
 
 ## Rules
 
