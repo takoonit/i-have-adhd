@@ -11,6 +11,9 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+RESULTS_DIR = (ROOT / "evals" / "results").resolve()
+
 TIME = re.compile(
     r"\b\d+\s*(?:-|–)?\s*\d*\s*"
     r"(?:min|mins|minute|minutes|hr|hrs|hour|hours|sec|secs|second|seconds|day|days|week|weeks)\b",
@@ -23,6 +26,16 @@ VERIFY = re.compile(r"\b(?:try|run|open|verify|check|confirm)\b[^.\n]{0,60}`", r
 # Pre-filter only. Section 20 and section 23.5 both caught "the step you skipped" as a false
 # positive: a neutral reference to a step, not an attribution to the person.
 BLAME = re.compile(r"\byou (?:forgot|skipped|missed|should have|failed to|didn't|did not)\b", re.I)
+
+
+def result_path(value: str) -> Path:
+    path = Path(value)
+    if not path.is_absolute():
+        path = ROOT / path
+    path = path.resolve()
+    if not path.is_relative_to(RESULTS_DIR) or path.suffix != ".jsonl" or not path.is_file():
+        raise SystemExit("inputs must be existing .jsonl files inside evals/results")
+    return path
 
 
 def load(path: Path) -> dict[str, list[str]]:
@@ -81,7 +94,10 @@ def report(label: str, by_case: dict[str, list[str]]) -> dict[str, dict[str, flo
 
 
 def main() -> None:
-    ctl, cand = Path(sys.argv[1]), Path(sys.argv[2])
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+
+    ctl, cand = result_path(sys.argv[1]), result_path(sys.argv[2])
     a, b = report("CONTROL (shipped facts)", load(ctl)), report("FACTS-V2", load(cand))
 
     print(f"\n{'=' * 78}\nDELTA  (facts-v2 minus control)\n{'=' * 78}")

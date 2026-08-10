@@ -3,7 +3,7 @@
 Draft, 2026-08-08. Not run. Not pre-registered yet.
 
 This is the study `gap-analysis.md` §22.4 says the project cannot do without: **nothing
-measured so far involves a reader.** Every number in `gap-analysis.md` §6–§24 is a
+measured so far involves a reader.** Every number in `gap-analysis.md` §6–§28 is a
 property of generated text. The rules demonstrably change what a model writes; whether
 that changes what a person does is unmeasured, and no study in the literature sweep
 measured it either.
@@ -28,10 +28,10 @@ Three sub-questions, in descending order of how much this project needs them:
    next action?
 3. **Perceived effort.** Does the response feel cheaper to act on?
 
-**Smallest effect of interest: dz = 0.5.** Chosen because it is the feasibility line (see
-§6): below it, the participant numbers exceed what a project this size can recruit, so an
-effect smaller than that is one this study cannot honestly claim either way. Stating it in
-advance is what makes a null interpretable rather than an embarrassment.
+**Planning effect: dz = 0.5.** This is the provisional feasibility threshold used in §6.
+The final sample size will use the pilot's within-participant standard deviation, not the
+pilot effect estimate. A non-significant result will not be treated as evidence of no
+effect.
 
 ---
 
@@ -48,16 +48,16 @@ neuropsychologically heterogeneous — 11% of diagnosed adults show no measurabl
 dysfunction, and battery effect sizes span 0.05–0.70. Between-subjects designs pay for
 that variance twice. Each participant is their own control.
 
-**Item assignment:** 8–12 cases per participant, drawn from the 13 usable cases (§4),
-condition rotated across participants so each case appears in both conditions about
-equally often.
+**Item assignment:** two cases per participant, one in each condition. Case, condition and
+order are counterbalanced across participants. Stage 1 will identify a smaller set of
+matched cases before the main study.
 
-**Analysis:** paired comparison on participant means for the headline test; mixed-effects
-model with random intercepts for participant and case as the pre-registered secondary,
-because it uses the repeated items rather than averaging them away. The gain from the
-mixed model over the paired test depends on item variance and the intraclass correlation,
-**both unknown until the pilot** — so the power table in §6 is computed for the paired
-test and should be read as the conservative floor.
+Each case is a separate block: read the response, answer the immediate items, complete the
+filler task, then answer the delayed items. Block order is counterbalanced.
+
+**Analysis:** paired comparison for the primary test. A mixed-effects model with random
+intercepts for participant and case is a sensitivity analysis only if the pilot supports
+it. The power table in §6 is a planning estimate for the paired test, not a lower bound.
 
 ---
 
@@ -101,7 +101,7 @@ and predate nine subsequent ruleset changes, including the scope-line revert, th
 narrowing and the rule-7 merge. They are responses from a skill that no longer exists.
 
 Cost by this repo's own history: roughly $5–10 for both arms across 13 cases at 3 trials.
-One response per case per condition is then selected for the study — **selected before any
+One response per case per condition is then selected for the study, **selected before any
 participant sees it, by a rule fixed in advance** (e.g. the median-length trial), not
 chosen by reading them, which would let stimulus selection encode the hypothesis.
 
@@ -112,31 +112,32 @@ every artifact in them.*
 
 ## 5. Dependent variables
 
-### DV1 — Resumption after a gap (primary)
+### DV1: Delayed next-action accuracy (primary)
 
-The unique contribution. Procedure: participant reads the response and states an intended
-next action; a filler task runs for 8–10 minutes; then, without the response visible:
+Procedure: participant reads the response and states an intended next action; a filler
+task runs for 8–10 minutes; then, without the response visible:
 
 - "What were you in the middle of?"
 - "What is the next thing you would do?"
 
-Scored 0–2 against a per-case rubric written before data collection.
+The delayed next action is scored 0–2 against a per-case rubric written before data
+collection. Context recall is recorded as a secondary outcome.
 
 **Honest limit:** a within-session filler is a *proxy* for the real claim, which is about
 returning hours or days later. A next-day return arm is the true test and is proposed as
 Stage 3, because attrition would wreck it at the sample sizes in §6.
 
-### DV2 — Next-action accuracy (primary)
+### DV2: Immediate next-action accuracy (secondary)
 
 Immediately after reading, free-text: "What is the single next thing you would do?"
 Scored 0–2 against the same per-case rubric.
 
-### DV3 — Perceived effort (secondary)
+### DV3: Perceived effort (exploratory)
 
 One item, 1–7: "How much effort would it take to start on this?" Single-item measures are
-noisy; this is secondary and will not carry a claim on its own.
+noisy; this is exploratory and will not carry a claim on its own.
 
-### DV4 — Qualitative (Stage 1 only)
+### DV4: Qualitative (Stage 1 only)
 
 Think-aloud transcripts. Not scored quantitatively.
 
@@ -167,8 +168,9 @@ Computed by simulation, two-sided paired t-test, alpha .05. Not quoted from memo
 
 Smallest n for 80% power: dz 0.80 → 15; 0.65 → 21; **0.50 → 34**; 0.35 → 67; 0.25 → 127.
 
-**Target: n = 35 completers**, powered for the SESOI of dz = 0.5. Anything below dz = 0.35
-is out of reach for this project and should not be claimed in either direction.
+**Provisional target: n = 35 completers**, based on dz = 0.5. Stage 1 will supply the
+within-participant standard deviation for the final calculation. Add a pre-registered
+allowance for exclusions and attrition.
 
 ---
 
@@ -187,17 +189,16 @@ read for this protocol.)
 
 1. **Recruit from populations where diagnosis is already dense** — ADHD developer
    communities, r/ADHD_Programmers, ADHD-focused professional groups — with self-reported
-   *formal diagnosis* as the inclusion criterion. Self-report has its own error, and it is
-   an order of magnitude better than an ASRS-positive from a general pool.
+   *formal diagnosis* as the inclusion criterion. Record this as self-report; do not imply
+   that the study independently verified a diagnosis.
 2. **Collect the ASRS anyway, as a continuous severity measure, not a gate.** It costs one
    screen and enables an exploratory moderation analysis: does benefit scale with symptom
    severity? Note in advance that moderation needs more power than a main effect, so this
    is exploratory and will be labelled as such.
-3. **Panel platforms: verify before designing around them.** ADHD is not confirmed to be a
-   built-in Prolific prescreener — the documentation retrieved for this protocol lists
-   anxiety, depression, OCD and PTSD, and does not list ADHD. Confirm with Prolific
-   support before assuming; otherwise use their custom-screening feature plus a
-   diagnosis question, and accept the extra cost of screening out.
+3. **Panel platforms: verify before designing around them.** Check Prolific's live
+   Audience Checker for a built-in formal-diagnosis prescreener. If none is available,
+   use Prolific's paid custom-screening flow. Obtain consent before collecting diagnosis
+   or other health data.
 
 Also require: writes code regularly (the stimuli are developer tasks), reads English
 fluently.
@@ -212,8 +213,9 @@ actually takes, how many items a participant tolerates before fatigue, whether t
 are scorable, and the item variance and ICC the mixed model needs. Expect it to change
 the design.
 
-**Stage 2 — main study, n = 35.** DV1 and DV2 primary, DV3 secondary. Hosted survey. No
-custom software: the whole thing is read-a-response, answer-questions, wait, answer again.
+**Stage 2: main study, provisional n = 35.** Each participant completes two cases. DV1 is
+primary, DV2 is secondary and DV3 is exploratory. Use a hosted survey. No custom software:
+the whole thing is read a response, answer questions, wait, then answer again.
 Building a bespoke tool for this is the failure mode this repo has a skill about.
 
 **Stage 3 — next-day resumption, if Stage 2 shows anything.** The real version of the
@@ -225,29 +227,30 @@ maths.
 
 ## 9. Ethics
 
-Stated once. This is human-subjects work involving a clinical population.
+Stated once. This is human-subjects work recruiting people by health status.
 
-- Internal product testing generally does not require IRB review. **Publishing a claim
-  that "research shows this helps people with ADHD" generally does.** Decide which this is
-  before Stage 2, not after.
+- Before recruitment, obtain a written determination from the applicable ethics or IRB
+  body, or document why no such body has jurisdiction. Publication intent is not the
+  criterion.
 - ADHD status is health-adjacent data; in the EU/UK it is special-category under GDPR.
   Collect no identifiers, store responses pseudonymously, state retention and deletion in
   the consent text.
 - No diagnosis is offered, implied, or collected beyond self-report and a severity screen.
 - Pay participants properly. Prolific's own minimum is a floor, not a target.
-- Pre-register on OSF before Stage 2, with the SESOI, DVs, rubrics, exclusion rules and
-  analysis plan fixed. This also closes the hole §22.6 recorded: OSF was never searched
-  during the literature sweep, so it is unknown whether anyone is already running this.
+- Pre-register on OSF before Stage 2, with the primary outcome, planning threshold,
+  rubrics, exclusion rules and analysis plan fixed. This also closes the hole §22.6
+  recorded: OSF was never searched during the literature sweep, so it is unknown whether
+  anyone is already running this.
 
 ---
 
 ## 10. How this fails
 
-- **A null that means nothing.** At n = 35 an effect below dz ≈ 0.4 is invisible. The
-  SESOI in §1 exists so this is reported as "smaller than we can see", never as "no
-  effect".
-- **The package problem.** A positive result credits nine rules and six facts jointly. It
-  cannot say which. If Stage 2 is positive, rule-level attribution still belongs to the
+- **A null that means nothing.** The provisional n = 35 design has limited sensitivity
+  below dz = 0.4. Report uncertainty and the interval; do not claim equivalence from a
+  non-significant result.
+- **The package problem.** A positive result credits nine rules and the output-defaults
+  block jointly. It cannot say which. If Stage 2 is positive, rule-level attribution still belongs to the
   ablation harness, not here.
 - **Stimulus selection.** Choosing which trial to show by reading them would encode the
   hypothesis. Fixed in advance in §4.2; if that rule is broken the study is invalid.

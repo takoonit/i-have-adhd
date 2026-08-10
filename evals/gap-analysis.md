@@ -1510,7 +1510,7 @@ be made from it, however cleanly the metrics seem to map.* Fact-specific metrics
 design's justification for moving five facts in one arm. They were not sufficient, and the
 run that revealed it cost $2.17.
 
-## 27. The facts do not move this behaviour at all. Both prior conclusions were noise.
+## 27. No detected estimate-density effect on `complex-plan`. Both prior attributions were noise.
 
 16 calls, $1.81, `complex-plan` only, 8 trials per arm — the current skill (four facts
 rewritten) against the pre-rewrite six-fact version, byte-identical apart from those four
@@ -1529,8 +1529,9 @@ shuffles. 95% CI [−5.33, +4.83].
 Everything either of the last two sections claimed about fact wording and estimates.
 
 - **§24: "F4's rewrite is rejected — a 32% drop."** Wrong. Retracted in §26 for the wrong
-  reason, and now wrong on its own terms too: no fact wording moves this metric.
-- **§26: "the mover is among F1/F3/F5/F6."** Also wrong. There is no mover.
+  reason, and this comparison detects no F4-specific effect.
+- **§26: "the mover is among F1/F3/F5/F6."** Also wrong. This comparison does not
+  identify a mover.
 
 The pilot effect of −8.0 units is **outside the confidence interval** and is excluded. The
 headline "−32%" (about −4.2 units) sits just inside it and is not formally excluded, which
@@ -1548,7 +1549,7 @@ The same condition, run twice:
 
 Both n = 3 samples were unrepresentative draws from the same wide distribution, in opposite
 directions, and the 8-unit "effect" between them was the gap between two accidents. The
-underlying distribution on `complex-plan` runs 5 to 22 regardless of condition.
+observed counts span 5 to 22 across conditions.
 
 Every ablation in §13–§20 ran at n = 3. The large ones — rule 3's 8/9 → 1/9, rule 1's
 3/3 → 0/3, rule 9's 0/3 → 3/3 — are near-total behavioural switches and are unlikely to be
@@ -1558,53 +1559,39 @@ metric this section just showed n = 3 cannot resolve. Neither has been re-run at
 
 ### 27.3 What it means for the skill
 
-**The rules carry the behaviour; the facts are inert.** §20 measured that ablating rule 6
-*together with* fact 4 cut time units 8.0 → 2.7. Rewriting fact 4 alone, three different
-ways, changes nothing. Consistent reading: the instruction does the work and the
-justification beside it does not.
+**This run detects no estimate-density effect from the four-line rewrite on
+`complex-plan`.** §20 measured rule 6 and fact 4 removed together, so it cannot assign the
+effect to either one. The present run says only that these four wording changes did not
+move this metric detectably at n = 8 per arm.
 
-Consequence, and it simplifies the pending decision entirely: **all six facts can be
-corrected for accuracy at no behavioural cost.** F4 was the only one held back, on a
-finding that has now evaporated. There is no longer a measured reason to keep any wording
-that §22 showed to be false.
+It does not test the other rule metrics, the whole facts block, or F4-v3 at n = 8. The
+current skill therefore stops presenting the block as a clinical causal model. §28
+replaces it with short output defaults that restate the behaviour the nine rules already
+require.
 
-It also sharpens a question this document has not asked: if the facts are inert, the
-instruction-budget evidence in §10 says they are a cost with no return, and the section
-should be justified as motivation for a human reader of `SKILL.md` rather than as
-something that steers the model. Not acted on. It would need its own ablation — the whole
-block removed, all nine rules' metrics counted — and that is a bigger question than this
-run can carry.
+A full-block ablation remains the way to learn whether the summary itself changes model
+output. It is no longer needed to correct an unsupported reader claim.
 
 ### 27.4 Limits
 
 - **One case, one metric, one model.** `complex-plan` is where the signal was; nothing here
-  says the facts are inert on metrics other than estimate density.
+  addresses metrics other than estimate density.
 - **8 per arm gives 53% power for d = 1.1.** A marginal null would have been uninformative.
   This is not marginal — d = −0.05, p = 0.96 — but the CI still spans ±5 units, so a real
   effect around a third of baseline is not formally excluded.
-- **The four rewrites stay applied.** They are correct, and they now have a null measured
-  at 8 rather than an assumption made at 3.
+- **The four-line rewrite had no detected cost on this metric.** No broader behavioural
+  claim follows.
 
-## 28. The skill is frozen
+## 28. Current status: output defaults, reader effect untested
 
-Fact 4's accuracy fix is applied, which was the last wording in `SKILL.md` that §22 showed
-to be unsupported. All six facts now state what the evidence supports; the nine rules are
-untouched and have been throughout §22–§27.
+The clinical facts block has been replaced by five output defaults. They describe the
+response shape and make no claim about every person with ADHD. The nine detailed rules
+remain unchanged.
 
-```
-4. Duration is hard to judge and harder to hold. Vague estimates fail: "a bit of work"
-   gives the reader nothing to bound the task with. Give a number, even a rough one.
-```
-
-The unsupported half of the old wording was the mechanism — "time estimates feel uniform",
-"register the same" — which §22 found was measured only below a minute and never for
-forecasting real work. "Vague estimates fail" was never a claim about ADHD; it is a
-prohibition about output, and it is kept verbatim.
-
-**Frozen from here.** Nothing in `skills/i-have-adhd/SKILL.md` changes until the reader
-study in `evals/reader-study/protocol.md` has run. The next step is regenerating the 13
-stimulus pairs from this frozen version, per §4.2 of that protocol — the stored pairs
-predate nine ruleset changes and one of them contains fabricated output.
+This is now the study candidate. No rule changes should be made before the reader-study
+pilot unless a correctness or safety issue requires one. The next step is regenerating
+the usable stimulus pairs from this version per protocol §4.2; the stored candidates
+predate later rule changes and one contains fabricated output.
 
 ### Follow-ups, recorded and not done
 
@@ -1613,16 +1600,12 @@ Ranked by how much they would change what this repository claims.
 1. **Re-run rules 2 and 6 at n = 8.** Their ablations (numbered lines 8.5 → 4.5; time units
    8.0 → 2.7) are the size, metric and sample size §27.2 showed n = 3 cannot resolve. Both
    rules are *kept* either way, so the risk is to the claims, not to the skill. ~$3.
-2. **Ablate the facts block entirely.** If the facts are inert (§27.3), the
-   instruction-budget evidence in §10 says they are cost without return. Removing all six
-   and counting every rule's metric is the test. Bigger than any run so far, and it would
-   decide whether that section exists to steer the model or to persuade a human reading
-   `SKILL.md`.
+2. **Ablate the output-defaults block.** Remove the five-line summary and count every
+   rule's metric. This would test whether the summary steers model output; it would not
+   establish a reader effect.
 3. **Rule 8's cap of three**, unchanged despite §22.3 finding both choice-overload
    meta-analyses agree option count is not the driver and that expert readers are helped by
    more options. Deliberately not touched before the reader study, which is the thing that
    would actually settle whether capping helps.
 4. **Rule 1 and 3's two-minute threshold**, traced to an uncited productivity heuristic
    answering a different question. Same reasoning as 3.
-5. **F6's anti-softening clause and the scope sentence** (§23.3, §25) — both unfalsifiable
-   on this catalogue, both predicting a decrease in something that occurs zero times.

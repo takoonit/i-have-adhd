@@ -60,13 +60,13 @@ A skill for your coding assistant that stops it from burying the answer. Action 
 
 ## What's measured, and what isn't
 
-Every rule has been **ablated** — deleted one at a time, the same prompts re-run, the difference counted. Seven of nine measurably change what the model writes. Removing rule 3 takes closing actions from 8 of 9 replies to 1 of 9. Two rules show no effect and are kept anyway: a rule a verbose model needs is not redundant because a terse one doesn't.
+Every rule has been ablated: deleted one at a time, with the same prompts re-run and the difference counted. Removing seven of nine rules changed at least one counted feature of model output in the recorded runs. Most runs used three trials per case, so the moderate results for rules 2 and 6 remain provisional. Removing rule 3 produced the clearest switch, taking closing actions from 8 of 9 replies to 1 of 9.
 
-What has **not** been measured: whether any of it helps a reader. Every number here is a property of generated text, not of a person. A literature sweep found nobody else has measured it either — the two closest trials in adults with ADHD both came back null.
+What has **not** been measured: whether any of it helps a reader. Every number here is a property of generated text, not of a person. A literature sweep found nobody else has measured it either; the two closest trials in adults with ADHD both came back null.
 
-The six facts the rules are built on were graded against clinical research. **Five of six did not survive**, and rewriting them changes nothing the model does — measured at 8 trials per arm, difference −0.25 units, p = 0.96. The rules carry the behaviour; the justifications beside them are inert. Two earlier claims to the contrary were retracted when a bigger sample showed both were noise on n = 3.
+An eight-trial-per-arm follow-up on `complex-plan` found no detectable change in estimate density after four explanatory lines were rewritten: 13.12 against 12.88 units per reply, exact permutation p = 0.959, 95% CI [−5.33, +4.83]. That result covers one case, one metric and one model. It does not establish that every explanation is behaviourally inert.
 
-So: these are writing conventions with demonstrated effects on model output. Anything stronger is unearned, and this project will not claim it.
+The skill now states output defaults instead of causal claims about ADHD readers. Clinical sources constrain what this project may claim; they do not show that these rules help a reader.
 
 Receipts, including every retraction and eight metric errors: [evals/gap-analysis.md](./evals/gap-analysis.md).
 
