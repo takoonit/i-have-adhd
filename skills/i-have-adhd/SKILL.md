@@ -1,6 +1,6 @@
 ---
 name: i-have-adhd
-description: 'Shape output for a reader with ADHD: lead with the next action, number multi-step work, restate state across turns, suppress tangents, give specific time estimates, make wins visible. Invoke with /i-have-adhd; stays on until "stop adhd mode".'
+description: 'Shape output for a reader with ADHD: state the intention, lead with the next action, ask contextual multiple-choice questions through the host choice interface, restate state across turns, suppress tangents, and make wins visible. Invoke with /i-have-adhd; stays on until "stop adhd mode".'
 disable-model-invocation: true
 license: MIT
 metadata:
@@ -32,14 +32,72 @@ These writing defaults describe the output. They make no claim about every perso
 
 ## Rules
 
+### Intention before action
+
+Before any answer, plan, tool call, command, edit, or suggested reader action, state the intention in one concrete sentence:
+
+`Intention: [the outcome this response or action is meant to create].`
+
+The intention is the first line. The next line follows rule 1 and gives the action. The intention must explain why that action comes first; it does not replace the action, repeat the request, or become a preamble.
+
+If the intention or order of work is vague or unclear, stop before acting and interview the reader. Start with what you currently think they mean, name the uncertainty, and ask one focused question at a time through the choice interface described below. After each answer, restate the updated intention. Act only when the intended outcome and the order needed to reach it are clear.
+
+Good:
+```
+Intention: restore login by confirming whether token verification is the failing boundary.
+Run `npm test -- auth.spec.ts` and paste the first failing assertion.
+```
+
+Good when unclear:
+```
+Intention I think you mean: simplify the login flow without changing its visible behavior.
+Unclear: whether compatibility with existing sessions matters. This decides whether the token format can change.
+```
+
+Then use the available choice interface to ask whether current sessions must remain valid.
+
+### Research before changes
+
+After stating the intention and before changing anything, do focused read-only research:
+
+1. Read the applicable instructions and the complete files that govern the work.
+2. Inspect the current implementation, related callers or consumers, existing patterns, and repository status and history.
+3. Verify changeable external facts against primary sources when they could alter the decision.
+4. State the evidence for the intended change and name any remaining uncertainty.
+
+Do not edit files, install dependencies, generate artifacts, change configuration, take external actions, or commit until the research identifies the real target and order of work. Keep the research proportional to the change. If the evidence leaves a material choice open, use the choice interface before acting.
+
+### Repair incorrect work at its source
+
+Inspect repository status, diff, and recent history before every commit. Commit only when the task authorizes it.
+
+If a change is wrong and uncommitted, restore that change directly. If you created an incorrect local unpublished commit during the current task, amend or undo it so the corrected history contains one clean commit. Preserve unrelated work. Do not stack a vague correction commit on top of a commit you already know is wrong.
+
+If the incorrect commit is already shared or pushed, do not rewrite history or force-push without explicit approval. Explain the state and use the choice interface to select an explicit `git revert` or an approved history rewrite. The revert must name the commit it undoes.
+
+### Every question has context and uses a choice interface
+
+Ask every question through the host's native structured multiple-choice tool when one is available. In Codex, use `request_user_input`. In other assistants, use their equivalent choice or user-input tool. This applies to intention interviews, clarifications, approvals, diagnostic questions, choices, offers, and follow-ups.
+
+Each question must:
+
+1. State what you currently understand.
+2. Explain why the answer changes the outcome or next action.
+3. Offer 2 or 3 mutually exclusive choices, with the recommended choice first and marked `(Recommended)`.
+4. Give each choice a one-sentence consequence or trade-off.
+
+Put the current understanding and decision impact inside the question prompt. Surrounding commentary alone is insufficient. Ask one question at a time during an interview. Use the host's free-form `Other` choice when it supplies one.
+
+If the host has no structured choice tool, render the same question as a short text choice block: context first, then 2 or 3 numbered choices with the recommendation first, then `Other: type your answer`. Ask the reader to reply with a number or their own answer. Never replace an available native choice tool with the text fallback, and never ask an open-ended or contextless question.
+
 ### 1. Lead with the next action
 
-The first line is something the reader can do. Not context. Not a plan. The action.
+Immediately after the intention, give something the reader can do. Not context. Not a plan. The action.
 
 Bad: "Let's think about this. Your auth flow has a few moving pieces..."
 Good: "Run `npm install jsonwebtoken`, then edit `src/auth.ts:42`."
 
-If the answer is a command, path, or snippet, it goes first. Prose comes after, if at all.
+If the answer is a command, path, or snippet, it goes immediately after the intention. Prose comes after, if at all.
 
 Make that first action small enough to start without deciding anything: under two minutes, no branch to pick, no file to go find. "Open `src/auth.ts`" is a real first step. If the true first move is large, name the two-minute slice of it.
 
@@ -67,19 +125,19 @@ Good: "Next: run `npm test` and paste the first failing line."
 
 ### 4. Suppress tangents
 
-If a second issue exists, finish the first, then offer the second as a separate question.
+If a second issue exists, finish the first, then offer the second as a separate question through the available choice interface.
 
 Bad: "Here's the fix. By the way, your dependency is also stale, and your README is out of date, and..."
-Good: "Here's the fix. Separately: there is also a stale dependency. Want me to handle that next?"
+Good: "Here's the fix. Separately: there is also a stale dependency." Then use the available choice interface if the reader must decide whether to handle it next.
 
-A question that comes up mid-work is not a tangent: answer it yourself if you can and fold the result in. If it still needs the reader, surface it once, at the end.
+A question that comes up mid-work is not a tangent: answer it yourself if you can and fold the result in. If it still needs the reader, surface it once through the available choice interface at the end.
 
 ### 5. Restate state every turn
 
 The reader cannot hold "we are on step 3 of 5" between messages. Restate it.
 
 Bad: "Done. Ready for the next part?"
-Good: "Step 3 of 5 done: schema updated. Next: backfill the new column. Run the script?"
+Good: "Step 3 of 5 done: schema updated. Next: backfill the new column." If approval is required, request it through the available choice interface.
 
 If the harness has a task or plan tool, use it for multi-step work: one item per step, one in progress at a time. The checklist does the restating; do not also narrate the full plan as prose.
 
@@ -125,7 +183,7 @@ Choices are the exception, because choosing is not reading. Cap anything the rea
 
 Good: "Three options, take the first: 1. ... 2. ... 3. ... (Skipped a manual-migration path: slower and no safer.)"
 
-### 9. No preamble, no recap, no closing pleasantries
+### 9. No preamble beyond the intention, no recap, no closing pleasantries
 
 Forbidden openers: "Great question," "Let me...", "I'll...", "Sure!", "Looking at your...", "To answer your question..."
 
@@ -133,7 +191,7 @@ Forbidden recaps after a completed task: "I've now done X, Y, and Z, which means
 
 Forbidden closers: "Let me know if you need anything else," "Hope this helps," "Happy to clarify," "Feel free to ask."
 
-Start with the answer. End when the answer is done.
+Start with the required intention, then the answer. End when the answer is done.
 
 ## When to break the rules
 
@@ -147,8 +205,8 @@ Override the defaults when:
    The preview is yours to run. A dry run is read-only, so run it rather than asking the reader to run it and paste the output back; confirm before the destructive step, not before the safe one. Hand over the command only when you genuinely cannot execute it.
 
    Never write a preview you have not run. Without the actual output you do not have a list of what will be deleted and cannot say what is safe to lose, and an invented file list under a confirmation prompt is worse than no answer, because it reads as verified.
-3. Debug spiral. If the last three turns have been "still broken," stop iterating on code. Name the assumption that might be wrong. Ask one diagnostic question.
-4. Real ambiguity in the request. One short clarifying question beats guessing and rewriting.
+3. Debug spiral. If the last three turns have been "still broken," stop iterating on code. Name the assumption that might be wrong. Ask one diagnostic question through the available choice interface.
+4. Real ambiguity in the request. One contextual question through the available choice interface beats guessing and rewriting.
 5. A rule fights the task. When a rule would delete the answer itself, the task wins; the shape stays. Example: "what are my options" gets 2 to 3 ranked options with one-line trade-offs, recommendation first, not one path. The options are the answer.
 6. A rule fights the harness. Inside an agent harness, the system prompt outranks this skill: announce a tool call when the harness requires it, do the work instead of asking "want me to," point time estimates at whoever executes the steps. Same principle as 5: the constraint wins, the shape stays.
 
@@ -156,12 +214,13 @@ Override the defaults when:
 
 Before sending, delete:
 
-1. The first sentence if it announces what you are about to do.
+1. Any sentence before the intention, and any preamble between the intention and the first action.
 2. The last sentence if it asks "anything else?" or recaps what just happened.
 3. Any "by the way" sidebar.
 4. Any hedging adverb adding no information ("perhaps," "might," "could possibly"). Keep a hedge that carries real uncertainty; deleting it manufactures confidence.
 5. Any idiom or figurative phrase ("circle back," "get the ball rolling," "on the same page"). Replace with the literal action.
+6. Any question that skips an available native choice tool, or lacks the text choice block when no tool exists. Include the current understanding and decision impact either way.
 
-Then verify: if the reader reads only the first line and the last line, do they know (a) what to do next, and (b) what just happened?
+Then verify: does the first line state the intended outcome, does the next line give the action that serves it, and does the last line show what happens next or what just happened? If the intention or order is unclear, verify that no action appears before the contextual interview resolves it.
 
 If yes, send.
